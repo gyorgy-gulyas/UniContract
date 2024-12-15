@@ -117,7 +117,7 @@ namespace someNamespace {
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace someNamespace {
-    @decorator_valueobject
+    @decorator
     interface Address {
         enum InnerEnum{
             Value1,
@@ -135,6 +135,80 @@ namespace someNamespace {
         enum_inner: unicontract.enum = interface.enums[0]
         self.assertEqual(enum_inner.name, "InnerEnum")
         self.assertEqual(len(enum_inner.enum_elements), 2)
+
+    def test_interface_property(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    @decorator
+    interface Address {
+        property country:General.Country
+        @required
+        property city: string
+        @required
+        property zipCode: integer
+    }
+}
+"""))
+        root = engine.Build(session)
+        namespace: unicontract.namespace = root.namespaces[0]
+        interface: unicontract.interface = namespace.interfaces[0]
+        self.assertEqual(len(interface.properties), 3)
+
+        property: unicontract.interface_property = interface.properties[0]
+        self.assertEqual(property.name, "country")
+        self.assertEqual(property.type.kind, unicontract.type.Kind.Reference)
+        self.assertEqual(property.type.reference_name.getText(), "General.Country")
+
+        property: unicontract.interface_property = interface.properties[1]
+        self.assertEqual(property.name, "city")
+        self.assertEqual(property.type.kind, unicontract.type.Kind.Primitive)
+        self.assertEqual(property.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.String)
+        self.assertEqual(property.decorators[0].name, "required")
+
+        property: unicontract.interface_property = interface.properties[2]
+        self.assertEqual(property.name, "zipCode")
+        self.assertEqual(property.type.kind, unicontract.type.Kind.Primitive)
+        self.assertEqual(property.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.Integer)
+
+
+    def test_interface_method(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    @decorator
+    interface CustomerService {
+        @decorator_method
+        method CreateCustomer( @required id: string ) => Customer
+        
+        @decorator_method
+        method DumpAllCustomer()
+    }
+}
+"""))
+        root = engine.Build(session)
+        namespace: unicontract.namespace = root.namespaces[0]
+        interface: unicontract.interface = namespace.interfaces[0]
+        self.assertEqual(len(interface.properties), 0)
+        self.assertEqual(len(interface.methods), 2)
+
+        method: unicontract.interface_method = interface.methods[0]
+        self.assertEqual(method.name, "CreateCustomer")
+        self.assertEqual(method.return_type.kind, unicontract.type.Kind.Reference)
+        self.assertEqual(method.return_type.reference_name.getText(), "Customer")
+        self.assertEqual(method.decorators[0].name, "decorator_method")
+        self.assertEqual(len(method.params), 1)
+        param: unicontract.interface_method_param = method.params[0]
+        self.assertEqual(param.name, "id")
+        self.assertEqual(param.type.kind, unicontract.type.Kind.Primitive)
+        self.assertEqual(param.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.String)
+        self.assertEqual(param.decorators[0].name, "required")
+
+        method: unicontract.interface_method = interface.methods[1]
+        self.assertEqual(method.name, "DumpAllCustomer")
+        self.assertEqual(method.return_type, None)
+        self.assertEqual(method.decorators[0].name, "decorator_method")
+        self.assertEqual(len(method.params), 0)
 
 if __name__ == "__main__":
     unittest.main()

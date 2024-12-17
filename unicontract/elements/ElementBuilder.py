@@ -5,12 +5,12 @@ from unicontract.elements.Elements import *
 
 
 class ElementBuilder(UniContractGrammarVisitor):
-    def __init__(self):
+    def __init__(self,fileName: str):
         self.elementTree = contract()
-        self.fileName: str = ""
+        self.fileName: str = fileName
 
     # Visit a parse tree produced by UniContractGrammar#contract.
-    def visitContract(self, ctx:UniContractGrammar.ContractContext):
+    def visitContract(self, ctx: UniContractGrammar.ContractContext):
 
         counter = 0
         while True:
@@ -22,8 +22,12 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         return self.elementTree
 
+    # Visit a parse tree produced by UniContractGrammar#import_rule.
+    def visitImport_rule(self, ctx:UniContractGrammar.Import_ruleContext):
+        return self.visit(ctx.qualifiedName())
+
     # Visit a parse tree produced by UniContractGrammar#namespace.
-    def visitNamespace(self, ctx:UniContractGrammar.NamespaceContext):
+    def visitNamespace(self, ctx: UniContractGrammar.NamespaceContext):
         result: namespace = namespace(self.fileName, ctx.start)
         ctx.start.line
         if (ctx.qualifiedName() != None):
@@ -58,11 +62,11 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#namespace_elements.
-    def visitNamespace_elements(self, ctx:UniContractGrammar.Namespace_elementsContext):
+    def visitNamespace_elements(self, ctx: UniContractGrammar.Namespace_elementsContext):
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by UniContractGrammar#interface.
-    def visitInterface(self, ctx:UniContractGrammar.InterfaceContext):
+    def visitInterface(self, ctx: UniContractGrammar.InterfaceContext):
         result = interface(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -103,11 +107,11 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#interface_element.
-    def visitInterface_element(self, ctx:UniContractGrammar.Interface_elementContext):
+    def visitInterface_element(self, ctx: UniContractGrammar.Interface_elementContext):
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by UniContractGrammar#interface_property.
-    def visitInterface_property(self, ctx:UniContractGrammar.Interface_propertyContext):
+    def visitInterface_property(self, ctx: UniContractGrammar.Interface_propertyContext):
         result = interface_property(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -127,9 +131,8 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         return result
 
-
     # Visit a parse tree produced by UniContractGrammar#interface_method.
-    def visitInterface_method(self, ctx:UniContractGrammar.Interface_methodContext):
+    def visitInterface_method(self, ctx: UniContractGrammar.Interface_methodContext):
         result = interface_method(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -160,7 +163,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#interface_method_param.
-    def visitInterface_method_param(self, ctx:UniContractGrammar.Interface_method_paramContext):
+    def visitInterface_method_param(self, ctx: UniContractGrammar.Interface_method_paramContext):
         result = interface_method_param(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -181,11 +184,11 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#type.
-    def visitType(self, ctx:UniContractGrammar.TypeContext):
+    def visitType(self, ctx: UniContractGrammar.TypeContext):
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by UniContractGrammar#primitive_type.
-    def visitPrimitive_type(self, ctx:UniContractGrammar.Primitive_typeContext):
+    def visitPrimitive_type(self, ctx: UniContractGrammar.Primitive_typeContext):
         result = primitive_type(self.fileName, ctx.start)
         result.kind = type.Kind.Primitive
 
@@ -211,7 +214,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#reference_type.
-    def visitReference_type(self, ctx:UniContractGrammar.Reference_typeContext):
+    def visitReference_type(self, ctx: UniContractGrammar.Reference_typeContext):
         result = reference_type(self.fileName, ctx.start)
         result.kind = type.Kind.Reference
         if (ctx.qualifiedName() != None):
@@ -226,7 +229,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#list_type.
-    def visitList_type(self, ctx:UniContractGrammar.List_typeContext):
+    def visitList_type(self, ctx: UniContractGrammar.List_typeContext):
         result = list_type(self.fileName, ctx.start)
         result.kind = type.Kind.List
         result.item_type = self.visit(ctx.type_())
@@ -234,7 +237,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#map_type.
-    def visitMap_type(self, ctx:UniContractGrammar.Map_typeContext):
+    def visitMap_type(self, ctx: UniContractGrammar.Map_typeContext):
         result = map_type(self.fileName, ctx.start)
         result.kind = type.Kind.Map
         result.key_type = self.visit(ctx.type_(0))
@@ -243,7 +246,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#qualifiedName.
-    def visitQualifiedName(self, ctx:UniContractGrammar.QualifiedNameContext):
+    def visitQualifiedName(self, ctx: UniContractGrammar.QualifiedNameContext):
         result = qualified_name(self.fileName, ctx.start)
 
         counter = 0
@@ -257,7 +260,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#decorator.
-    def visitDecorator(self, ctx:UniContractGrammar.DecoratorContext):
+    def visitDecorator(self, ctx: UniContractGrammar.DecoratorContext):
         result = decorator(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -275,7 +278,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#decorator_param.
-    def visitDecorator_param(self, ctx:UniContractGrammar.Decorator_paramContext):
+    def visitDecorator_param(self, ctx: UniContractGrammar.Decorator_paramContext):
         result = decorator_param(self.fileName, ctx.start)
         if (ctx.qualifiedName() != None):
             result.kind = decorator_param.Kind.QualifiedName
@@ -294,7 +297,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#enum.
-    def visitEnum(self, ctx:UniContractGrammar.EnumContext):
+    def visitEnum(self, ctx: UniContractGrammar.EnumContext):
         result = enum(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
@@ -322,7 +325,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#enum_element.
-    def visitEnum_element(self, ctx:UniContractGrammar.Enum_elementContext):
+    def visitEnum_element(self, ctx: UniContractGrammar.Enum_elementContext):
         result = enum_element(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.value = ctx.IDENTIFIER().getText()
@@ -340,7 +343,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#inherits.
-    def visitInherits(self, ctx:UniContractGrammar.InheritsContext):
+    def visitInherits(self, ctx: UniContractGrammar.InheritsContext):
         result: List[qualified_name] = []
 
         counter = 0
@@ -349,7 +352,7 @@ class ElementBuilder(UniContractGrammarVisitor):
             if (base_class == None):
                 break
             counter = counter + 1
-            child:qualified_name = self.visit(base_class)
+            child: qualified_name = self.visit(base_class)
             child.parent = result
             result.append(child)
 

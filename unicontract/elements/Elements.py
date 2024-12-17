@@ -85,6 +85,7 @@ class decorator_param(base_element):
 
 class contract(IScope):
     def __init__(self):
+        self.imports: List[contract] = []
         self.namespaces: List[namespace] = []
 
     def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:

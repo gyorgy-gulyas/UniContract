@@ -3,6 +3,8 @@ from antlr4 import *
 from unicontract.grammar.UniContractLexer import *
 from unicontract.grammar.UniContractGrammar import *
 from unicontract.elements.ElementBuilder import *
+from typing import Dict
+
 
 class Source:
     def __init__(self):
@@ -26,11 +28,12 @@ class Source:
 
 
 class Session:
-    def __init__(self, source:Source):
+    def __init__(self, source: Source):
         self.source: Source = source
         self.syntaxTree: UniContractGrammar.ContractContext = []
         self.diagnostics: List[Diagnostic] = []
-        self.contract: contract = None
+        self.main: contract = None
+        self.imports: Dict[str, contract] = {}
 
     def HasDiagnostic(self):
         if (len(self.diagnostics) > 0):
@@ -39,13 +42,13 @@ class Session:
 
     def HasAnyError(self):
         for msg in self.diagnostics:
-            if(msg.severity == Diagnostic.Severity.Error):
+            if (msg.severity == Diagnostic.Severity.Error):
                 return True
         return False
 
     def HasAnyWarning(self):
         for msg in self.diagnostics:
-            if(msg.severity == Diagnostic.Severity.Warning):
+            if (msg.severity == Diagnostic.Severity.Warning):
                 return True
         return False
 
@@ -56,7 +59,7 @@ class Session:
     def ClearDiagnostics(self):
         self.diagnostics.clear()
 
-    def ReportDiagnostic(self, message, severity, fileName="", line=0, column=0 ):
+    def ReportDiagnostic(self, message, severity, fileName="", line=0, column=0):
         diagnostic: Diagnostic = Diagnostic()
         diagnostic.severity = severity
         diagnostic.fileName = fileName
@@ -67,28 +70,85 @@ class Session:
 
 
 class Engine:
+    def __init__(self, configuration: Dict[str, str]={}):
+        self.configuration: Dict[str, str] = configuration
 
     def Build(self, session: Session):
-        self.__create_syntax_tree(session)
-        self.__create_element_tree(session)
+        session.syntaxTree = self.__create_syntax_tree(session.source, session)
+        session.main = self.__create_element_tree(session.syntaxTree, session.source, session)
+        session.main = self.__merge_contracts(session)
 
-        return session.contract
+        return session.main
 
-    def __create_syntax_tree(self, session: Session):
-            lexer = UniContractLexer(InputStream(session.source.content))
-            grammar = UniContractGrammar(CommonTokenStream(lexer))
+    def __create_syntax_tree(self, source: Source, session: Session):
+        lexer = UniContractLexer(InputStream(source.content))
+        grammar = UniContractGrammar(CommonTokenStream(lexer))
 
-            error_listener = Engine.__syntaxErrorListener__(session.source.fileName, session)
-            grammar.removeErrorListeners()
-            grammar.addErrorListener(error_listener)
+        error_listener = Engine.__syntaxErrorListener__(source.fileName, session)
+        grammar.removeErrorListeners()
+        grammar.addErrorListener(error_listener)
 
-            session.syntaxTree = grammar.contract()
+        return grammar.contract()
 
-    def __create_element_tree(self, session: Session):
-        visitor = ElementBuilder()
-        visitor.fileName = session.source.fileName
-        session.contract = visitor.visit(session.syntaxTree)
+    def __create_element_tree(self, syntaxTree: UniContractGrammar.ContractContext, source: Source, session: Session):
+        visitor = ElementBuilder(source.fileName)
+
+        _contract: contract = visitor.visit(syntaxTree)
+        _imports: List[qualified_name] = []
+
+        counter = 0
+        while True:
+            import_rule = syntaxTree.import_rule((counter))
+            if (import_rule == None):
+                break
+            counter = counter + 1
+            _imports.append(visitor.visit(import_rule))
+
+        for _import in _imports:
+            if (_import.getText() in session.imports):
+                imported_contract = session.imports[_import.getText()]
+            else:
+                imported_contract = self.__import_contract(_import, session)
+                session.imports[_import.getText()] = imported_contract
+
+            _contract.imports.append(imported_contract)
+
+        return _contract
+
+    def __import_contract(self, import_name: qualified_name, session: Session):
+        import_source = Source.CreateFromFile(import_name.getText()+".contract")
+        import_syntaxTree = self.__create_syntax_tree(import_source, session)
+        import_contract = self.__create_element_tree(import_syntaxTree, import_source, session)
+
+        return import_contract
+
+    def __merge_contracts( self, session: Session ):
+
+        for imported_contract in session.imports.values():
+            if(imported_contract is session.main):
+                continue
+
+            for imported_namespace in imported_contract.namespaces:
+                # find domain in merged
+                namespace_already: namespace = self.__find_namespace_by_name(imported_namespace.name,session)
+                if (namespace_already == None):
+                    # append domain to merged
+                    session.main.namespaces.append(imported_namespace)
+                else:
+                    # merge event and contexts to merged
+                    namespace_already.enums.extend(imported_namespace.enums)
+                    namespace_already.interfaces.extend(imported_namespace.interfaces)
+
+        return session.main
     
+    def __find_namespace_by_name(namespace_name:qualified_name,session: Session):
+        for namespace in session.main.namespaces:
+            if (namespace.name.getText() == namespace_name.getText()):
+                return namespace
+
+        return None
+      
+
     class __syntaxErrorListener__(ErrorListener):
         def __init__(self, fileName, session: Session):
             super(Engine.__syntaxErrorListener__, self).__init__()
@@ -96,7 +156,8 @@ class Engine:
             self.session = session
 
         def syntaxError(self, recognizer, offendingSymbol, line, column, message, e):
-            self.session.ReportDiagnostic(message,Diagnostic.Severity.Error,self.fileName,line,column)
+            self.session.ReportDiagnostic(message, Diagnostic.Severity.Error, self.fileName, line, column)
+
 
 class Diagnostic:
     def __init__(self):
@@ -108,9 +169,8 @@ class Diagnostic:
 
     def toText(self):
         return f"{self.fileName}({self.line},{self.column}): {self.severity} :{self.message}\n"
-    
+
     class Severity(Enum):
         Message = 1,
         Warning = 2,
         Error = 3,
-        

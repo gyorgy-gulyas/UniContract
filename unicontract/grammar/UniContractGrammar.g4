@@ -5,7 +5,11 @@ options {
 }
 
 contract
-    : namespace* EOF
+    : import_rule* namespace* EOF
+    ;
+
+import_rule
+    : 'import' qualifiedName
     ;
 
 namespace

@@ -17,6 +17,15 @@ class UniContractGrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by UniContractGrammar#import_rule.
+    def enterImport_rule(self, ctx:UniContractGrammar.Import_ruleContext):
+        pass
+
+    # Exit a parse tree produced by UniContractGrammar#import_rule.
+    def exitImport_rule(self, ctx:UniContractGrammar.Import_ruleContext):
+        pass
+
+
     # Enter a parse tree produced by UniContractGrammar#namespace.
     def enterNamespace(self, ctx:UniContractGrammar.NamespaceContext):
         pass

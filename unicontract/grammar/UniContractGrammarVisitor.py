@@ -14,6 +14,11 @@ class UniContractGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by UniContractGrammar#import_rule.
+    def visitImport_rule(self, ctx:UniContractGrammar.Import_ruleContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by UniContractGrammar#namespace.
     def visitNamespace(self, ctx:UniContractGrammar.NamespaceContext):
         return self.visitChildren(ctx)

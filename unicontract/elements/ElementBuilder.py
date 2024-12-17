@@ -118,6 +118,8 @@ class ElementBuilder(UniContractGrammarVisitor):
         if (ctx.type_() != None):
             result.type = self.visit(ctx.type_())
             result.type.parent = result
+        if (ctx.READONLY() != None):
+            result.isAsync = True
 
         counter = 0
         while True:
@@ -139,6 +141,8 @@ class ElementBuilder(UniContractGrammarVisitor):
         if (ctx.type_() != None):
             result.return_type = self.visit(ctx.type_())
             result.return_type.parent = result
+        if (ctx.ASYNC() != None):
+            result.isAsync = True
 
         counter = 0
         while True:

@@ -47,6 +47,7 @@ EXTERNAL: 'external';
 PROPERTY: 'property';
 METHOD: 'method';
 READONLY: 'readonly';
+ASYNC: 'async';
 
 // constans
 INTEGER_CONSTANS: [0-9]+;

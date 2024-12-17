@@ -161,6 +161,7 @@ class interface_property(decorated_base_element):
         super().__init__(fileName, pos)
         self.name: str = None
         self.type: type = None
+        self.isReadonly: bool = False
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitInterfaceProperty(self, parentData)
@@ -175,6 +176,7 @@ class interface_method(decorated_base_element):
         self.name: str = None
         self.params: List[interface_method_param] = []
         self.return_type: type = None
+        self.isAsync: bool = False
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitInterfaceMethod(self, parentData)

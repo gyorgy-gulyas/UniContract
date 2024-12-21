@@ -12,7 +12,7 @@ def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
 
 
 class DotnetEmmiter:
-    def __init__(self, output_dir: str ="./", configuration: Dict[str, str] ={}):
+    def __init__(self, output_dir: str = "./", configuration: Dict[str, str] = {}):
         self.configuration: dotnet_configuration = dotnet_configuration(configuration, output_dir)
 
     def Emit(self, session: Session):
@@ -31,7 +31,7 @@ class DotnetEmmiter:
 
             for interface in namespace.interfaces:
                 content: str = self.beginFile(namespace)
-                content += self.interfaceText(enum, indent=1)
+                content += self.interfaceText(interface, indent=1)
                 content += self.endFile(namespace)
                 result.append(dotnet_code(path, interface.name, content))
 
@@ -46,7 +46,7 @@ class DotnetEmmiter:
         for using in self.configuration.defaultUsings:
             using_statements.append(f"using {using};")
 
-        return "\n".join(using_statements)
+        return "\n".join(using_statements) + "\n"
 
     def beginFile(self, namespace: namespace) -> str:
         buffer = io.StringIO()
@@ -61,15 +61,23 @@ class DotnetEmmiter:
     def endFile(self, namespace: namespace):
         buffer = io.StringIO()
         buffer.write("\n")
-        buffer.write(f"}} // end of {namespace.name.getText()}\n")
+        buffer.write("}\n")
+        return buffer.getvalue()
+
+    def documentLines(self, hinted_element: hinted_base_element, indent: int = 1):
+        buffer = io.StringIO()
+        for document_line in hinted_element.document_lines:
+            buffer.write(f"{'\t'*indent}///{document_line}\n")
         return buffer.getvalue()
 
     def enumText(self, enum: enum, indent: int = 1):
         buffer = io.StringIO()
         buffer.write("\n")
+        buffer.write(self.documentLines(enum, indent))
         buffer.write(f"{'\t'*indent}enum {enum.name}\n")
         buffer.write(f"{'\t'*indent}{{\n")
         for enum_element in enum.enum_elements:
+            buffer.write(self.documentLines(enum_element, indent))
             buffer.write(f"{'\t'*(indent+1)}{enum_element.value},\n")
         buffer.write(f"{'\t'*indent}}}\n")
         return buffer.getvalue()
@@ -77,20 +85,66 @@ class DotnetEmmiter:
     def interfaceText(self, interface: interface, indent: int = 1):
         buffer = io.StringIO()
         buffer.write("\n")
-        buffer.write(f"{'\t'*indent}interface {interface.name}")
-        buffer.write("{")
+        buffer.write(self.documentLines(interface, indent))
+        buffer.write(f"{'\t'*indent}interface {interface.name}\n")
+        buffer.write(f"{'\t'*indent}{{\n")
+
+        for enum in interface.enums:
+            buffer.write(f"{self.enumText(enum, indent+1)}")
+        buffer.write("\n")
+
         for property in interface.properties:
-            buffer.write(f"{self.propertyText(property, indent+1)},")
+            buffer.write(f"{self.propertyText(property, indent+1)}")
+        buffer.write("\n")
+
         for method in interface.methods:
-            buffer.write(f"{self.methodText(method, indent+1)},")
+            buffer.write(f"{self.methodText(method, indent+1)}")
         buffer.write(f"{'\t'*indent}}}\n")
         return buffer.getvalue()
 
-    def propertyText(self, interface_property: interface_property, indent: int):
+    def propertyText(self, property: interface_property, indent: int):
         buffer = io.StringIO()
-        buffer.write(f"{'\t'*indent}public {self.typeText(type)} {interface_property.name} {{ get; ")
-        if (interface_property.isReadonly == False):
-            buffer.write(f"set; }}")
+        buffer.write(self.documentLines(property, indent))
+        buffer.write(f"{'\t'*indent}public {self.typeText(property.type)} {property.name} {{ get; ")
+        if (property.isReadonly == False):
+            buffer.write("set;")
+        buffer.write("}\n")
+        return buffer.getvalue()
+
+    def methodText(self, method: interface_method, indent: int):
+        buffer = io.StringIO()
+        buffer.write(self.documentLines(method, indent))
+        buffer.write(f"{'\t'*indent}")
+        if (method.return_type != None):
+            type_text = self.typeText(method.return_type)
+            if (method.isAsync == True):
+                buffer.write(f"Task<{type_text}>")
+            else:
+                buffer.write(f"{type_text}")
+        else:
+            if (method.isAsync == True):
+                buffer.write(f"Task")
+            else:
+                buffer.write(f"void")
+        buffer.write(f" {method.name}(")
+
+        if (any(param.document_lines for param in method.params) or any(param.decorators for param in method.params) or len(method.params) >= 5):
+            break_lines = True
+        else:
+            break_lines = False
+
+        firstParam: bool = True
+        for param in method.params:
+            if (firstParam != True):
+                buffer.write(f", ")
+            if (break_lines):
+                buffer.write(f"\n")
+                buffer.write(self.documentLines(param, indent+1))
+                buffer.write(f"{'\t'*(indent+1)}")
+            buffer.write(f"{self.typeText(param.type)} {param.name}")
+            firstParam = False
+
+        buffer.write(f");\n")
         return buffer.getvalue()
 
     def typeText(self, type: type):
@@ -104,7 +158,7 @@ class DotnetEmmiter:
             case type.Kind.Map:
                 return self.typeTextMap(type)
 
-    def typeTextPrimitive(self, type: primitive_type, indent: int):
+    def typeTextPrimitive(self, type: primitive_type):
         match type.primtiveKind:
             case primitive_type.PrimtiveKind.Integer:
                 return "int"
@@ -113,11 +167,11 @@ class DotnetEmmiter:
             case primitive_type.PrimtiveKind.Float:
                 return "double"
             case primitive_type.PrimtiveKind.Date:
-                return "System.DateOnly"
+                return "DateOnly"
             case primitive_type.PrimtiveKind.Time:
-                return "System.TimeOnly"
+                return "TimeOnly"
             case primitive_type.PrimtiveKind.DateTime:
-                return "System.DateTime"
+                return "DateTime"
             case primitive_type.PrimtiveKind.String:
                 return "string"
             case primitive_type.PrimtiveKind.Boolean:
@@ -125,13 +179,13 @@ class DotnetEmmiter:
             case primitive_type.PrimtiveKind.Bytes:
                 return "byte[]"
 
-    def typeTextReference(self, type: reference_type, indent: int):
+    def typeTextReference(self, type: reference_type):
         return type.reference_name.getText()
 
-    def typeTextList(self, type: list_type, indent: int):
+    def typeTextList(self, type: list_type):
         return f"System.Generic.List<{self.typeText(type.item_type)}>"
 
-    def typeTextMap(self, type: map_type, indent: int):
+    def typeTextMap(self, type: map_type):
         return f"System.Generic.Dictionary<{self.typeText(type.key_type)},{self.typeText(type.value_type)}>"
 
 

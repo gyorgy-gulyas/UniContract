@@ -184,7 +184,7 @@ class interface_method(decorated_base_element):
         for param in self.params:
             param.visit(visitor, data)
         if(self.return_type != None):
-            self.return_type.visit(visitor, data)
+            self.return_type.visit(visitor, data,"return_type")
 
 class interface_method_param(decorated_base_element):
     def __init__(self, fileName, pos):

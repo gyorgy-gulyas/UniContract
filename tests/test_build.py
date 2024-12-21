@@ -147,30 +147,40 @@ namespace someNamespace {
         property city: string
         @required
         property zipCode: integer
+
+        readonly property addressText: string
     }
 }
 """))
         root = engine.Build(session)
         namespace: unicontract.namespace = root.namespaces[0]
         interface: unicontract.interface = namespace.interfaces[0]
-        self.assertEqual(len(interface.properties), 3)
+        self.assertEqual(len(interface.properties), 4)
 
         property: unicontract.interface_property = interface.properties[0]
         self.assertEqual(property.name, "country")
+        self.assertEqual(property.isReadonly, False)
         self.assertEqual(property.type.kind, unicontract.type.Kind.Reference)
         self.assertEqual(property.type.reference_name.getText(), "General.Country")
 
         property: unicontract.interface_property = interface.properties[1]
         self.assertEqual(property.name, "city")
+        self.assertEqual(property.isReadonly, False)
         self.assertEqual(property.type.kind, unicontract.type.Kind.Primitive)
         self.assertEqual(property.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.String)
         self.assertEqual(property.decorators[0].name, "required")
 
         property: unicontract.interface_property = interface.properties[2]
         self.assertEqual(property.name, "zipCode")
+        self.assertEqual(property.isReadonly, False)
         self.assertEqual(property.type.kind, unicontract.type.Kind.Primitive)
         self.assertEqual(property.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.Integer)
 
+        property: unicontract.interface_property = interface.properties[3]
+        self.assertEqual(property.name, "addressText")
+        self.assertEqual(property.isReadonly, True)
+        self.assertEqual(property.type.kind, unicontract.type.Kind.Primitive)
+        self.assertEqual(property.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.String)
 
     def test_interface_method(self):
         engine = Engine()
@@ -183,6 +193,9 @@ namespace someNamespace {
         
         @decorator_method
         method DumpAllCustomer()
+
+        @decorator_method
+        async method CreateCustomerAsync( @required id: string ) => Customer
     }
 }
 """))
@@ -190,10 +203,11 @@ namespace someNamespace {
         namespace: unicontract.namespace = root.namespaces[0]
         interface: unicontract.interface = namespace.interfaces[0]
         self.assertEqual(len(interface.properties), 0)
-        self.assertEqual(len(interface.methods), 2)
+        self.assertEqual(len(interface.methods), 3)
 
         method: unicontract.interface_method = interface.methods[0]
         self.assertEqual(method.name, "CreateCustomer")
+        self.assertEqual(method.isAsync, False)
         self.assertEqual(method.return_type.kind, unicontract.type.Kind.Reference)
         self.assertEqual(method.return_type.reference_name.getText(), "Customer")
         self.assertEqual(method.decorators[0].name, "decorator_method")
@@ -206,9 +220,23 @@ namespace someNamespace {
 
         method: unicontract.interface_method = interface.methods[1]
         self.assertEqual(method.name, "DumpAllCustomer")
+        self.assertEqual(method.isAsync, False)
         self.assertEqual(method.return_type, None)
         self.assertEqual(method.decorators[0].name, "decorator_method")
         self.assertEqual(len(method.params), 0)
+
+        method: unicontract.interface_method = interface.methods[2]
+        self.assertEqual(method.name, "CreateCustomerAsync")
+        self.assertEqual(method.isAsync, True)
+        self.assertEqual(method.return_type.kind, unicontract.type.Kind.Reference)
+        self.assertEqual(method.return_type.reference_name.getText(), "Customer")
+        self.assertEqual(method.decorators[0].name, "decorator_method")
+        self.assertEqual(len(method.params), 1)
+        param: unicontract.interface_method_param = method.params[0]
+        self.assertEqual(param.name, "id")
+        self.assertEqual(param.type.kind, unicontract.type.Kind.Primitive)
+        self.assertEqual(param.type.primtiveKind, unicontract.primitive_type.PrimtiveKind.String)
+        self.assertEqual(param.decorators[0].name, "required")
 
 if __name__ == "__main__":
     unittest.main()

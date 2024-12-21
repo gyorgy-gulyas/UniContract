@@ -33,7 +33,7 @@ With UniContract, the same `DataStore` interface can be generated in multiple pr
 
 ## Related Projects
 
-UniContract is part of the **Microverse** project, a broader initiative to create consistent, language-agnostic patterns for microservices. One key implementation of UniContract can be found in the **PolyPersist** project, which leverages this tool to provide a unified interface for database operations. Check out the PolyPersist project here:
+UniContract is part of the **Microniq** project, a broader initiative to create consistent, language-agnostic patterns for microservices. One key implementation of UniContract can be found in the **PolyPersist** project, which leverages this tool to provide a unified interface for database operations. Check out the PolyPersist project here:
 
 [PolyPersist on GitHub](https://github.com/gyorgy-gulyas/PolyPersist)
 

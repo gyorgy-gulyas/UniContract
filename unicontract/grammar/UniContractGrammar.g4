@@ -32,12 +32,12 @@ interface
         ;
         
         interface_property
-            : decorator* 'property' 'readonly'? IDENTIFIER ':' type
+            : decorator* 'readonly'? 'property' IDENTIFIER ':' type
             ;
 
    
         interface_method
-            : decorator* 'method' 'async'? IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
+            : decorator* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
             ;
 
         interface_method_param

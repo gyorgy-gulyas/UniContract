@@ -119,7 +119,7 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.type = self.visit(ctx.type_())
             result.type.parent = result
         if (ctx.READONLY() != None):
-            result.isAsync = True
+            result.isReadonly = True
 
         counter = 0
         while True:

@@ -13,7 +13,7 @@ import_rule
     ;
 
 namespace
-    : decorator* 'namespace' qualifiedName '{' namespace_elements* '}'
+    : DOCUMENT_LINE* decorator* 'namespace' qualifiedName '{' namespace_elements* '}'
     ;
 
 namespace_elements
@@ -22,7 +22,7 @@ namespace_elements
     ;
    
 interface
-    : decorator* 'interface' IDENTIFIER inherits? '{' interface_element* '}'
+    : DOCUMENT_LINE* decorator* 'interface' IDENTIFIER inherits? '{' interface_element* '}'
     ;
 
     interface_element
@@ -32,16 +32,16 @@ interface
         ;
         
         interface_property
-            : decorator* 'readonly'? 'property' IDENTIFIER ':' type
+            : DOCUMENT_LINE* decorator* 'readonly'? 'property' IDENTIFIER ':' type
             ;
 
    
         interface_method
-            : decorator* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
+            : DOCUMENT_LINE* decorator* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
             ;
 
         interface_method_param
-            : decorator* IDENTIFIER ':' type
+            : DOCUMENT_LINE* decorator* IDENTIFIER ':' type
             ;
 
 type
@@ -96,9 +96,9 @@ inherits
     ;
 
 enum
-    : decorator* 'enum' IDENTIFIER '{' enum_element? (',' enum_element)* '}'
+    : DOCUMENT_LINE* decorator* 'enum' IDENTIFIER '{' enum_element? (',' enum_element)* '}'
     ;
 
     enum_element
-        : decorator* IDENTIFIER
+        : DOCUMENT_LINE* decorator* IDENTIFIER
         ;

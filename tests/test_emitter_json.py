@@ -107,6 +107,7 @@ namespace SomeNamespace{
             ],
             "enums": [],
             "interfaces": [],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,
@@ -117,6 +118,45 @@ namespace SomeNamespace{
 }"""
         diff = jsondiff.diff(result, expected, syntax='symmetric')
         self.assertEqual(0, len(diff))
+
+    def tests_document_lines_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+#doc line 1
+#doc line 2
+namespace SomeNamespace{
+}
+"""))
+        engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        jsonEmmiter = JsonEmitter()
+        result = jsonEmmiter.Emit(session)
+        expected = """{
+    "$type": "contract",
+    "imports": [],
+    "namespaces": [
+        {
+            "$type": "namespace",
+            "name": "SomeNamespace",
+            "decorators": [],
+            "enums": [],
+            "interfaces": [],
+            "document_lines": [
+                "doc line 1",
+                "doc line 2"
+            ],
+            "location": {
+                "fileName": "internal string",
+                "line": 2,
+                "column": 0
+            }
+        }
+    ]
+}"""
+        diff = jsondiff.diff(result, expected, syntax='symmetric')
+        self.assertEqual(0, len(diff))
+
 
     def tests_namespace_ok(self):
         engine = Engine()
@@ -173,6 +213,7 @@ namespace SomeNamespace {
             ],
             "enums": [],
             "interfaces": [],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,
@@ -275,6 +316,7 @@ namespace SomeNamespace {
                                 }
                             ],
                             "value": "PrivatePerson",
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 6,
@@ -307,6 +349,7 @@ namespace SomeNamespace {
                                 }
                             ],
                             "value": "Company",
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 8,
@@ -314,6 +357,7 @@ namespace SomeNamespace {
                             }
                         }
                     ],
+                    "document_lines": [],
                     "location": {
                         "fileName": "internal string",
                         "line": 3,
@@ -322,6 +366,7 @@ namespace SomeNamespace {
                 }
             ],
             "interfaces": [],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,
@@ -432,6 +477,7 @@ namespace SomeDomain {
                                         }
                                     ],
                                     "value": "PrivatePerson",
+                                    "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 7,
@@ -464,6 +510,7 @@ namespace SomeDomain {
                                         }
                                     ],
                                     "value": "Company",
+                                    "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 9,
@@ -471,6 +518,7 @@ namespace SomeDomain {
                                     }
                                 }
                             ],
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 4,
@@ -480,6 +528,7 @@ namespace SomeDomain {
                     ],
                     "methods": [],
                     "properties": [],
+                    "document_lines": [],
                     "location": {
                         "fileName": "internal string",
                         "line": 3,
@@ -487,6 +536,7 @@ namespace SomeDomain {
                     }
                 }
             ],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,
@@ -552,6 +602,7 @@ namespace SomeNameSpace {
                                 }
                             },
                             "isReadonly": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 4,
@@ -596,6 +647,7 @@ namespace SomeNameSpace {
                                 }
                             },
                             "isReadonly": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 5,
@@ -639,6 +691,7 @@ namespace SomeNameSpace {
                                 }
                             },
                             "isReadonly": true,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 7,
@@ -660,6 +713,7 @@ namespace SomeNameSpace {
                                 }
                             },
                             "isReadonly": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 9,
@@ -682,6 +736,7 @@ namespace SomeNameSpace {
                                 }
                             },
                             "isReadonly": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 10,
@@ -689,6 +744,7 @@ namespace SomeNameSpace {
                             }
                         }
                     ],
+                    "document_lines": [],
                     "location": {
                         "fileName": "internal string",
                         "line": 3,
@@ -696,6 +752,7 @@ namespace SomeNameSpace {
                     }
                 }
             ],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,
@@ -797,6 +854,7 @@ namespace someNamespace {
                                             "column": 45
                                         }
                                     },
+                                    "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 6,
@@ -816,6 +874,7 @@ namespace someNamespace {
                                 }
                             },
                             "isAsync": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 5,
@@ -840,6 +899,7 @@ namespace someNamespace {
                             "params": [],
                             "return_type": {},
                             "isAsync": false,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 8,
@@ -887,6 +947,7 @@ namespace someNamespace {
                                             "column": 56
                                         }
                                     },
+                                    "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 12,
@@ -906,6 +967,7 @@ namespace someNamespace {
                                 }
                             },
                             "isAsync": true,
+                            "document_lines": [],
                             "location": {
                                 "fileName": "internal string",
                                 "line": 11,
@@ -914,6 +976,7 @@ namespace someNamespace {
                         }
                     ],
                     "properties": [],
+                    "document_lines": [],
                     "location": {
                         "fileName": "internal string",
                         "line": 3,
@@ -921,6 +984,7 @@ namespace someNamespace {
                     }
                 }
             ],
+            "document_lines": [],
             "location": {
                 "fileName": "internal string",
                 "line": 2,

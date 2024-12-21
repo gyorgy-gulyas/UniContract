@@ -6,7 +6,7 @@ from unicontract.emitters.DotnetEmmiter import *
 
 class TestEmitterDotnetDefault(unittest.TestCase):
 
-    def setUp(self):
+    def setUpClass():
         dotnet_code_helper.init_roslyn()
 
     def test_empty_ok(self):

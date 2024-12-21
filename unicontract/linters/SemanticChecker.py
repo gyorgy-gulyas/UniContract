@@ -96,7 +96,7 @@ class SemanticChecker(ElementVisitor):
     def visitMapType(self, map_type: map_type, parentData: Any, memberName: str) -> Any:
         pass
 
-    def visitDecoratedElement(self, decorated_element: decorated_base_element, parentData: Any) -> Any:
+    def visitDecoratedElement(self, decorated_element: hinted_base_element, parentData: Any) -> Any:
         pass
 
     def visitDecorator(self, decorator: decorator, parentData: Any) -> Any:

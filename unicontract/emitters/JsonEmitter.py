@@ -168,10 +168,10 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
         parentData[memberName] = data
         return data
 
-    def visitDecoratedElement(self, decorated_element: decorated_base_element, parentData: Any) -> Any:
-        data = []
-        parentData["decorators"] = data
-        return data
+    def visitHintedElement(self, hinted_element: hinted_base_element, parentData: Any) -> Any:
+        parentData["decorators"] = []
+        parentData["document_lines"] = []
+        return parentData
 
     def visitDecorator(self, decorator: decorator, parentData: Any) -> Any:
         data = {
@@ -179,7 +179,7 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
             "name": decorator.name,
             "params": [],
         }
-        parentData.append(data)
+        parentData["decorators"].append(data)
         return data
 
     def visitDecoratorParam(self, decorator_param: decorator_param, parentData: Any) -> Any:
@@ -193,6 +193,9 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
         }
         parentData['params'].append(data)
         return data
+
+    def visitDocumentLine(self, document_line: str, parentData: Any) -> Any:
+        parentData['document_lines'].append(document_line)
 
     def visitBaseElement(self, base_element: base_element, parentData: Any) -> Any:
         if (self.withLocation == True):

@@ -22,20 +22,23 @@ class base_element:
         return f"'{self.fileName}({self.line},{self.column})'"
 
 
-class decorated_base_element(base_element):
+class hinted_base_element(base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
+        self.document_lines: List[str] = []
         self.decorators: List[decorator] = []
 
     def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:
-        data = visitor.visitDecoratedElement(self, parentData)
+        visitor.visitHintedElement(self, parentData)
         super().visit(visitor, parentData)
         for decorator in self.decorators:
-            decorator.visit(visitor, data)
-        return data
+            decorator.visit(visitor, parentData)
+        for document_line in self.document_lines:
+            visitor.visitDocumentLine(document_line, parentData)
+        return parentData
 
 
-class internal_scoped_base_element(decorated_base_element,IScope):
+class internal_scoped_base_element(hinted_base_element,IScope):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.enums: List[enum] = []
@@ -115,7 +118,7 @@ class namespace(internal_scoped_base_element):
         return super().getChildren() + self.interfaces
 
 
-class enum(decorated_base_element):
+class enum(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.name: str = None
@@ -128,7 +131,7 @@ class enum(decorated_base_element):
             enum_element.visit(visitor, data)
 
 
-class enum_element(decorated_base_element):
+class enum_element(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.value = None
@@ -156,7 +159,7 @@ class interface(internal_scoped_base_element):
         for internal_enum in self.enums:
             internal_enum.visit(visitor, data)
 
-class interface_property(decorated_base_element):
+class interface_property(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.name: str = None
@@ -170,7 +173,7 @@ class interface_property(decorated_base_element):
         super().visit(visitor, data)
 
 
-class interface_method(decorated_base_element):
+class interface_method(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.name: str = None
@@ -186,7 +189,7 @@ class interface_method(decorated_base_element):
         if(self.return_type != None):
             self.return_type.visit(visitor, data,"return_type")
 
-class interface_method_param(decorated_base_element):
+class interface_method_param(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.name: str = None

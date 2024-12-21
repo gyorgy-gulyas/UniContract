@@ -12,6 +12,24 @@ class TestBuild(unittest.TestCase):
         self.assertIsInstance(root, contract)
         self.assertEqual(0, len(root.namespaces))
 
+    def test_line_comments_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+// line comment 1
+// line comment 1"""))
+        root = engine.Build(session)
+        self.assertIsInstance(root, contract)
+        self.assertEqual(0, len(root.namespaces))
+
+    def test_block_comments_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+/* comment 1
+  comment 1*/"""))
+        root = engine.Build(session)
+        self.assertIsInstance(root, contract)
+        self.assertEqual(0, len(root.namespaces))
+
     def test_lines_ok(self):
         engine = Engine()
         session = Session(Source.CreateFromText("""
@@ -24,6 +42,21 @@ namespace someNamespace{
         self.assertEqual(element.line, 2)
         self.assertEqual(element.column, 0)
         self.assertEqual(element.fileName, "internal string")
+
+    def test_document_lines_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+#doc line 1
+#doc line 2
+namespace someNamespace {}
+"""))
+        root = engine.Build(session)
+        self.assertIsInstance(root, contract)
+        self.assertEqual(1, len(root.namespaces))
+        namespace: unicontract.namespace = root.namespaces[0]
+        self.assertEqual(2, len(namespace.document_lines))
+        self.assertEqual(namespace.document_lines[0], "doc line 1")
+        self.assertEqual(namespace.document_lines[1], "doc line 2")
 
     def test_decorator_simple_ok(self):
         engine = Engine()

@@ -5,7 +5,7 @@ from unicontract.elements.Elements import *
 
 
 class ElementBuilder(UniContractGrammarVisitor):
-    def __init__(self,fileName: str):
+    def __init__(self, fileName: str):
         self.elementTree = contract()
         self.fileName: str = fileName
 
@@ -23,7 +23,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         return self.elementTree
 
     # Visit a parse tree produced by UniContractGrammar#import_rule.
-    def visitImport_rule(self, ctx:UniContractGrammar.Import_ruleContext):
+    def visitImport_rule(self, ctx: UniContractGrammar.Import_ruleContext):
         return self.visit(ctx.qualifiedName())
 
     # Visit a parse tree produced by UniContractGrammar#namespace.
@@ -42,6 +42,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child = self.visit(decorator)
             child.parent = result
             result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
 
         counter = 0
         while True:
@@ -83,6 +91,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child = self.visit(decorator)
             child.parent = result
             result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
 
         counter = 0
         while True:
@@ -131,6 +147,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child.parent = result
             result.decorators.append(child)
 
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
+
         return result
 
     # Visit a parse tree produced by UniContractGrammar#interface_method.
@@ -153,6 +177,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child = self.visit(decorator)
             child.parent = result
             result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
 
         counter = 0
         while True:
@@ -184,6 +216,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child = self.visit(decorator)
             child.parent = result
             result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
 
         return result
 
@@ -318,6 +358,14 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         counter = 0
         while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
+
+        counter = 0
+        while True:
             enum_element = ctx.enum_element((counter))
             if (enum_element == None):
                 break
@@ -343,6 +391,14 @@ class ElementBuilder(UniContractGrammarVisitor):
             child = self.visit(decorator)
             child.parent = result
             result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
 
         return result
 

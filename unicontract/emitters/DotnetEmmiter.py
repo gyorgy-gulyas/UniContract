@@ -110,9 +110,9 @@ class DotnetEmmiter:
         """
         buffer = io.StringIO()
         for document_line in hinted_element.document_lines:
-            buffer.write(f"{'\t'*indent}///{document_line}")
+            buffer.write(f"{self.tab(indent)}///{document_line}")
             buffer.write("\n")
-            
+
         return buffer.getvalue()
 
     def enumText(self, enum: enum, indent: int = 1):
@@ -266,6 +266,8 @@ class DotnetEmmiter:
         """
         return f"System.Generic.Dictionary<{self.typeText(type.key_type)},{self.typeText(type.value_type)}>"
 
+    def tab(self,indent=1):
+        return '\t'*indent
 
 class utils:
     @staticmethod

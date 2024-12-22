@@ -288,6 +288,8 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.primtiveKind = primitive_type.PrimtiveKind.Boolean
         elif (ctx.BYTES() != None):
             result.primtiveKind = primitive_type.PrimtiveKind.Bytes
+        elif (ctx.STREAM() != None):
+            result.primtiveKind = primitive_type.PrimtiveKind.Stream
 
         return result
 

@@ -243,6 +243,8 @@ class DotnetEmmiter:
                 return "bool"
             case primitive_type.PrimtiveKind.Bytes:
                 return "byte[]"
+            case primitive_type.PrimtiveKind.Stream:
+                return "Stream"
 
     def typeTextReference(self, type: reference_type):
         """

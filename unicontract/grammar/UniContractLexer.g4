@@ -38,6 +38,7 @@ DATETIME: 'dateTime';
 STRING: 'string';
 BOOLEAN: 'boolean';
 BYTES: 'bytes';
+STREAM: 'stream';
 LIST: 'list';
 MAP: 'map';
 

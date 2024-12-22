@@ -10,7 +10,7 @@ else:
 
 def serializedATN():
     return [
-        4,1,40,320,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
+        4,1,41,320,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,
         6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,
         2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,1,0,
         5,0,42,8,0,10,0,12,0,45,9,0,1,0,5,0,48,8,0,10,0,12,0,51,9,0,1,0,
@@ -37,7 +37,7 @@ def serializedATN():
         1,18,3,18,295,8,18,1,18,1,18,5,18,299,8,18,10,18,12,18,302,9,18,
         1,18,1,18,1,19,5,19,307,8,19,10,19,12,19,310,9,19,1,19,5,19,313,
         8,19,10,19,12,19,316,9,19,1,19,1,19,1,19,0,0,20,0,2,4,6,8,10,12,
-        14,16,18,20,22,24,26,28,30,32,34,36,38,0,1,1,0,16,24,344,0,43,1,
+        14,16,18,20,22,24,26,28,30,32,34,36,38,0,1,1,0,16,25,344,0,43,1,
         0,0,0,2,82,1,0,0,0,4,87,1,0,0,0,6,109,1,0,0,0,8,114,1,0,0,0,10,140,
         1,0,0,0,12,145,1,0,0,0,14,165,1,0,0,0,16,198,1,0,0,0,18,215,1,0,
         0,0,20,217,1,0,0,0,22,224,1,0,0,0,24,226,1,0,0,0,26,231,1,0,0,0,
@@ -45,83 +45,83 @@ def serializedATN():
         1,0,0,0,38,308,1,0,0,0,40,42,3,2,1,0,41,40,1,0,0,0,42,45,1,0,0,0,
         43,41,1,0,0,0,43,44,1,0,0,0,44,49,1,0,0,0,45,43,1,0,0,0,46,48,3,
         4,2,0,47,46,1,0,0,0,48,51,1,0,0,0,49,47,1,0,0,0,49,50,1,0,0,0,50,
-        52,1,0,0,0,51,49,1,0,0,0,52,53,5,0,0,1,53,1,1,0,0,0,54,56,5,38,0,
+        52,1,0,0,0,51,49,1,0,0,0,52,53,5,0,0,1,53,1,1,0,0,0,54,56,5,39,0,
         0,55,54,1,0,0,0,56,59,1,0,0,0,57,55,1,0,0,0,57,58,1,0,0,0,58,63,
         1,0,0,0,59,57,1,0,0,0,60,62,3,28,14,0,61,60,1,0,0,0,62,65,1,0,0,
         0,63,61,1,0,0,0,63,64,1,0,0,0,64,66,1,0,0,0,65,63,1,0,0,0,66,67,
-        5,12,0,0,67,83,3,32,16,0,68,70,5,38,0,0,69,68,1,0,0,0,70,73,1,0,
+        5,12,0,0,67,83,3,32,16,0,68,70,5,39,0,0,69,68,1,0,0,0,70,73,1,0,
         0,0,71,69,1,0,0,0,71,72,1,0,0,0,72,77,1,0,0,0,73,71,1,0,0,0,74,76,
         3,28,14,0,75,74,1,0,0,0,76,79,1,0,0,0,77,75,1,0,0,0,77,78,1,0,0,
-        0,78,80,1,0,0,0,79,77,1,0,0,0,80,81,5,12,0,0,81,83,5,35,0,0,82,57,
-        1,0,0,0,82,71,1,0,0,0,83,3,1,0,0,0,84,86,5,38,0,0,85,84,1,0,0,0,
+        0,78,80,1,0,0,0,79,77,1,0,0,0,80,81,5,12,0,0,81,83,5,36,0,0,82,57,
+        1,0,0,0,82,71,1,0,0,0,83,3,1,0,0,0,84,86,5,39,0,0,85,84,1,0,0,0,
         86,89,1,0,0,0,87,85,1,0,0,0,87,88,1,0,0,0,88,93,1,0,0,0,89,87,1,
         0,0,0,90,92,3,28,14,0,91,90,1,0,0,0,92,95,1,0,0,0,93,91,1,0,0,0,
         93,94,1,0,0,0,94,96,1,0,0,0,95,93,1,0,0,0,96,97,5,14,0,0,97,98,3,
         32,16,0,98,102,5,6,0,0,99,101,3,6,3,0,100,99,1,0,0,0,101,104,1,0,
         0,0,102,100,1,0,0,0,102,103,1,0,0,0,103,105,1,0,0,0,104,102,1,0,
         0,0,105,106,5,7,0,0,106,5,1,0,0,0,107,110,3,8,4,0,108,110,3,36,18,
-        0,109,107,1,0,0,0,109,108,1,0,0,0,110,7,1,0,0,0,111,113,5,38,0,0,
+        0,109,107,1,0,0,0,109,108,1,0,0,0,110,7,1,0,0,0,111,113,5,39,0,0,
         112,111,1,0,0,0,113,116,1,0,0,0,114,112,1,0,0,0,114,115,1,0,0,0,
         115,120,1,0,0,0,116,114,1,0,0,0,117,119,3,28,14,0,118,117,1,0,0,
         0,119,122,1,0,0,0,120,118,1,0,0,0,120,121,1,0,0,0,121,123,1,0,0,
-        0,122,120,1,0,0,0,123,124,5,13,0,0,124,126,5,36,0,0,125,127,3,34,
+        0,122,120,1,0,0,0,123,124,5,13,0,0,124,126,5,37,0,0,125,127,3,34,
         17,0,126,125,1,0,0,0,126,127,1,0,0,0,127,128,1,0,0,0,128,132,5,6,
         0,0,129,131,3,10,5,0,130,129,1,0,0,0,131,134,1,0,0,0,132,130,1,0,
         0,0,132,133,1,0,0,0,133,135,1,0,0,0,134,132,1,0,0,0,135,136,5,7,
         0,0,136,9,1,0,0,0,137,141,3,14,7,0,138,141,3,12,6,0,139,141,3,36,
         18,0,140,137,1,0,0,0,140,138,1,0,0,0,140,139,1,0,0,0,141,11,1,0,
-        0,0,142,144,5,38,0,0,143,142,1,0,0,0,144,147,1,0,0,0,145,143,1,0,
+        0,0,142,144,5,39,0,0,143,142,1,0,0,0,144,147,1,0,0,0,145,143,1,0,
         0,0,145,146,1,0,0,0,146,151,1,0,0,0,147,145,1,0,0,0,148,150,3,28,
         14,0,149,148,1,0,0,0,150,153,1,0,0,0,151,149,1,0,0,0,151,152,1,0,
-        0,0,152,155,1,0,0,0,153,151,1,0,0,0,154,156,5,31,0,0,155,154,1,0,
-        0,0,155,156,1,0,0,0,156,157,1,0,0,0,157,158,5,29,0,0,158,159,5,36,
-        0,0,159,160,5,3,0,0,160,161,3,18,9,0,161,13,1,0,0,0,162,164,5,38,
+        0,0,152,155,1,0,0,0,153,151,1,0,0,0,154,156,5,32,0,0,155,154,1,0,
+        0,0,155,156,1,0,0,0,156,157,1,0,0,0,157,158,5,30,0,0,158,159,5,37,
+        0,0,159,160,5,3,0,0,160,161,3,18,9,0,161,13,1,0,0,0,162,164,5,39,
         0,0,163,162,1,0,0,0,164,167,1,0,0,0,165,163,1,0,0,0,165,166,1,0,
         0,0,166,171,1,0,0,0,167,165,1,0,0,0,168,170,3,28,14,0,169,168,1,
         0,0,0,170,173,1,0,0,0,171,169,1,0,0,0,171,172,1,0,0,0,172,175,1,
-        0,0,0,173,171,1,0,0,0,174,176,5,32,0,0,175,174,1,0,0,0,175,176,1,
-        0,0,0,176,177,1,0,0,0,177,178,5,30,0,0,178,179,5,36,0,0,179,181,
+        0,0,0,173,171,1,0,0,0,174,176,5,33,0,0,175,174,1,0,0,0,175,176,1,
+        0,0,0,176,177,1,0,0,0,177,178,5,31,0,0,178,179,5,37,0,0,179,181,
         5,4,0,0,180,182,3,16,8,0,181,180,1,0,0,0,181,182,1,0,0,0,182,187,
         1,0,0,0,183,184,5,2,0,0,184,186,3,16,8,0,185,183,1,0,0,0,186,189,
         1,0,0,0,187,185,1,0,0,0,187,188,1,0,0,0,188,190,1,0,0,0,189,187,
         1,0,0,0,190,193,5,5,0,0,191,192,5,11,0,0,192,194,3,18,9,0,193,191,
-        1,0,0,0,193,194,1,0,0,0,194,15,1,0,0,0,195,197,5,38,0,0,196,195,
+        1,0,0,0,193,194,1,0,0,0,194,15,1,0,0,0,195,197,5,39,0,0,196,195,
         1,0,0,0,197,200,1,0,0,0,198,196,1,0,0,0,198,199,1,0,0,0,199,204,
         1,0,0,0,200,198,1,0,0,0,201,203,3,28,14,0,202,201,1,0,0,0,203,206,
         1,0,0,0,204,202,1,0,0,0,204,205,1,0,0,0,205,207,1,0,0,0,206,204,
-        1,0,0,0,207,208,5,36,0,0,208,209,5,3,0,0,209,210,3,18,9,0,210,17,
+        1,0,0,0,207,208,5,37,0,0,208,209,5,3,0,0,209,210,3,18,9,0,210,17,
         1,0,0,0,211,216,3,20,10,0,212,216,3,22,11,0,213,216,3,24,12,0,214,
         216,3,26,13,0,215,211,1,0,0,0,215,212,1,0,0,0,215,213,1,0,0,0,215,
         214,1,0,0,0,216,19,1,0,0,0,217,218,7,0,0,0,218,21,1,0,0,0,219,225,
-        3,32,16,0,220,221,5,28,0,0,221,222,5,8,0,0,222,223,5,35,0,0,223,
+        3,32,16,0,220,221,5,29,0,0,221,222,5,8,0,0,222,223,5,36,0,0,223,
         225,5,9,0,0,224,219,1,0,0,0,224,220,1,0,0,0,225,23,1,0,0,0,226,227,
-        5,25,0,0,227,228,5,8,0,0,228,229,3,18,9,0,229,230,5,9,0,0,230,25,
-        1,0,0,0,231,232,5,26,0,0,232,233,5,8,0,0,233,234,3,18,9,0,234,235,
+        5,26,0,0,227,228,5,8,0,0,228,229,3,18,9,0,229,230,5,9,0,0,230,25,
+        1,0,0,0,231,232,5,27,0,0,232,233,5,8,0,0,233,234,3,18,9,0,234,235,
         5,2,0,0,235,236,3,18,9,0,236,237,5,9,0,0,237,27,1,0,0,0,238,239,
-        5,10,0,0,239,254,5,36,0,0,240,241,5,10,0,0,241,242,5,36,0,0,242,
+        5,10,0,0,239,254,5,37,0,0,240,241,5,10,0,0,241,242,5,37,0,0,242,
         243,5,4,0,0,243,248,3,30,15,0,244,245,5,2,0,0,245,247,3,30,15,0,
         246,244,1,0,0,0,247,250,1,0,0,0,248,246,1,0,0,0,248,249,1,0,0,0,
         249,251,1,0,0,0,250,248,1,0,0,0,251,252,5,5,0,0,252,254,1,0,0,0,
         253,238,1,0,0,0,253,240,1,0,0,0,254,29,1,0,0,0,255,260,3,32,16,0,
-        256,260,5,33,0,0,257,260,5,34,0,0,258,260,5,35,0,0,259,255,1,0,0,
+        256,260,5,34,0,0,257,260,5,35,0,0,258,260,5,36,0,0,259,255,1,0,0,
         0,259,256,1,0,0,0,259,257,1,0,0,0,259,258,1,0,0,0,260,31,1,0,0,0,
-        261,266,5,36,0,0,262,263,5,1,0,0,263,265,5,36,0,0,264,262,1,0,0,
+        261,266,5,37,0,0,262,263,5,1,0,0,263,265,5,37,0,0,264,262,1,0,0,
         0,265,268,1,0,0,0,266,264,1,0,0,0,266,267,1,0,0,0,267,33,1,0,0,0,
-        268,266,1,0,0,0,269,270,5,27,0,0,270,275,3,32,16,0,271,272,5,2,0,
+        268,266,1,0,0,0,269,270,5,28,0,0,270,275,3,32,16,0,271,272,5,2,0,
         0,272,274,3,32,16,0,273,271,1,0,0,0,274,277,1,0,0,0,275,273,1,0,
-        0,0,275,276,1,0,0,0,276,35,1,0,0,0,277,275,1,0,0,0,278,280,5,38,
+        0,0,275,276,1,0,0,0,276,35,1,0,0,0,277,275,1,0,0,0,278,280,5,39,
         0,0,279,278,1,0,0,0,280,283,1,0,0,0,281,279,1,0,0,0,281,282,1,0,
         0,0,282,287,1,0,0,0,283,281,1,0,0,0,284,286,3,28,14,0,285,284,1,
         0,0,0,286,289,1,0,0,0,287,285,1,0,0,0,287,288,1,0,0,0,288,290,1,
-        0,0,0,289,287,1,0,0,0,290,291,5,15,0,0,291,292,5,36,0,0,292,294,
+        0,0,0,289,287,1,0,0,0,290,291,5,15,0,0,291,292,5,37,0,0,292,294,
         5,6,0,0,293,295,3,38,19,0,294,293,1,0,0,0,294,295,1,0,0,0,295,300,
         1,0,0,0,296,297,5,2,0,0,297,299,3,38,19,0,298,296,1,0,0,0,299,302,
         1,0,0,0,300,298,1,0,0,0,300,301,1,0,0,0,301,303,1,0,0,0,302,300,
-        1,0,0,0,303,304,5,7,0,0,304,37,1,0,0,0,305,307,5,38,0,0,306,305,
+        1,0,0,0,303,304,5,7,0,0,304,37,1,0,0,0,305,307,5,39,0,0,306,305,
         1,0,0,0,307,310,1,0,0,0,308,306,1,0,0,0,308,309,1,0,0,0,309,314,
         1,0,0,0,310,308,1,0,0,0,311,313,3,28,14,0,312,311,1,0,0,0,313,316,
         1,0,0,0,314,312,1,0,0,0,314,315,1,0,0,0,315,317,1,0,0,0,316,314,
-        1,0,0,0,317,318,5,36,0,0,318,39,1,0,0,0,40,43,49,57,63,71,77,82,
+        1,0,0,0,317,318,5,37,0,0,318,39,1,0,0,0,40,43,49,57,63,71,77,82,
         87,93,102,109,114,120,126,132,140,145,151,155,165,171,175,181,187,
         193,198,204,215,224,248,253,259,266,275,281,287,294,300,308,314
     ]
@@ -140,16 +140,17 @@ class UniContractGrammar ( Parser ):
                      "'}'", "'['", "']'", "'@'", "'=>'", "'import'", "'interface'", 
                      "'namespace'", "'enum'", "'integer'", "'number'", "'float'", 
                      "'date'", "'time'", "'dateTime'", "'string'", "'boolean'", 
-                     "'bytes'", "'list'", "'map'", "'inherits'", "'external'", 
-                     "'property'", "'method'", "'readonly'", "'async'" ]
+                     "'bytes'", "'stream'", "'list'", "'map'", "'inherits'", 
+                     "'external'", "'property'", "'method'", "'readonly'", 
+                     "'async'" ]
 
     symbolicNames = [ "<INVALID>", "DOT", "COMMA", "SEMI", "LPAREN", "RPAREN", 
                       "LCURLY", "RCURLY", "LBARCKET", "RBRACKET", "AT", 
                       "ARROW", "IMPORT", "INTERFACE", "NAMESPACE", "ENUM", 
                       "INTEGER", "NUMBER", "FLOAT", "DATE", "TIME", "DATETIME", 
-                      "STRING", "BOOLEAN", "BYTES", "LIST", "MAP", "INHERITS", 
-                      "EXTERNAL", "PROPERTY", "METHOD", "READONLY", "ASYNC", 
-                      "INTEGER_CONSTANS", "NUMBER_CONSTANS", "STRING_LITERAL", 
+                      "STRING", "BOOLEAN", "BYTES", "STREAM", "LIST", "MAP", 
+                      "INHERITS", "EXTERNAL", "PROPERTY", "METHOD", "READONLY", 
+                      "ASYNC", "INTEGER_CONSTANS", "NUMBER_CONSTANS", "STRING_LITERAL", 
                       "IDENTIFIER", "WS", "DOCUMENT_LINE", "LINE_COMMENT", 
                       "BLOCK_COMMENT" ]
 
@@ -206,22 +207,23 @@ class UniContractGrammar ( Parser ):
     STRING=22
     BOOLEAN=23
     BYTES=24
-    LIST=25
-    MAP=26
-    INHERITS=27
-    EXTERNAL=28
-    PROPERTY=29
-    METHOD=30
-    READONLY=31
-    ASYNC=32
-    INTEGER_CONSTANS=33
-    NUMBER_CONSTANS=34
-    STRING_LITERAL=35
-    IDENTIFIER=36
-    WS=37
-    DOCUMENT_LINE=38
-    LINE_COMMENT=39
-    BLOCK_COMMENT=40
+    STREAM=25
+    LIST=26
+    MAP=27
+    INHERITS=28
+    EXTERNAL=29
+    PROPERTY=30
+    METHOD=31
+    READONLY=32
+    ASYNC=33
+    INTEGER_CONSTANS=34
+    NUMBER_CONSTANS=35
+    STRING_LITERAL=36
+    IDENTIFIER=37
+    WS=38
+    DOCUMENT_LINE=39
+    LINE_COMMENT=40
+    BLOCK_COMMENT=41
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -297,7 +299,7 @@ class UniContractGrammar ( Parser ):
             self.state = 49
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 274877924352) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 549755831296) != 0):
                 self.state = 46
                 self.namespace()
                 self.state = 51
@@ -379,7 +381,7 @@ class UniContractGrammar ( Parser ):
                 self.state = 57
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==38:
+                while _la==39:
                     self.state = 54
                     self.match(UniContractGrammar.DOCUMENT_LINE)
                     self.state = 59
@@ -407,7 +409,7 @@ class UniContractGrammar ( Parser ):
                 self.state = 71
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
-                while _la==38:
+                while _la==39:
                     self.state = 68
                     self.match(UniContractGrammar.DOCUMENT_LINE)
                     self.state = 73
@@ -510,7 +512,7 @@ class UniContractGrammar ( Parser ):
             self.state = 87
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 84
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 89
@@ -536,7 +538,7 @@ class UniContractGrammar ( Parser ):
             self.state = 102
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 274877948928) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 549755855872) != 0):
                 self.state = 99
                 self.namespace_elements()
                 self.state = 104
@@ -692,7 +694,7 @@ class UniContractGrammar ( Parser ):
             self.state = 114
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 111
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 116
@@ -716,7 +718,7 @@ class UniContractGrammar ( Parser ):
             self.state = 126
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==27:
+            if _la==28:
                 self.state = 125
                 self.inherits()
 
@@ -726,7 +728,7 @@ class UniContractGrammar ( Parser ):
             self.state = 132
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 282931004416) != 0):
+            while (((_la) & ~0x3f) == 0 and ((1 << _la) & 565861975040) != 0):
                 self.state = 129
                 self.interface_element()
                 self.state = 134
@@ -885,7 +887,7 @@ class UniContractGrammar ( Parser ):
             self.state = 145
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 142
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 147
@@ -905,7 +907,7 @@ class UniContractGrammar ( Parser ):
             self.state = 155
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==31:
+            if _la==32:
                 self.state = 154
                 self.match(UniContractGrammar.READONLY)
 
@@ -1012,7 +1014,7 @@ class UniContractGrammar ( Parser ):
             self.state = 165
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 162
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 167
@@ -1032,7 +1034,7 @@ class UniContractGrammar ( Parser ):
             self.state = 175
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if _la==32:
+            if _la==33:
                 self.state = 174
                 self.match(UniContractGrammar.ASYNC)
 
@@ -1047,7 +1049,7 @@ class UniContractGrammar ( Parser ):
             self.state = 181
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 343597384704) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 687194768384) != 0):
                 self.state = 180
                 self.interface_method_param()
 
@@ -1145,7 +1147,7 @@ class UniContractGrammar ( Parser ):
             self.state = 198
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 195
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 200
@@ -1228,22 +1230,22 @@ class UniContractGrammar ( Parser ):
             self.state = 215
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [16, 17, 18, 19, 20, 21, 22, 23, 24]:
+            if token in [16, 17, 18, 19, 20, 21, 22, 23, 24, 25]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 211
                 self.primitive_type()
                 pass
-            elif token in [28, 36]:
+            elif token in [29, 37]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 212
                 self.reference_type()
                 pass
-            elif token in [25]:
+            elif token in [26]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 213
                 self.list_type()
                 pass
-            elif token in [26]:
+            elif token in [27]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 214
                 self.map_type()
@@ -1294,6 +1296,9 @@ class UniContractGrammar ( Parser ):
         def BYTES(self):
             return self.getToken(UniContractGrammar.BYTES, 0)
 
+        def STREAM(self):
+            return self.getToken(UniContractGrammar.STREAM, 0)
+
         def getRuleIndex(self):
             return UniContractGrammar.RULE_primitive_type
 
@@ -1323,7 +1328,7 @@ class UniContractGrammar ( Parser ):
             self.enterOuterAlt(localctx, 1)
             self.state = 217
             _la = self._input.LA(1)
-            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 33488896) != 0)):
+            if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 67043328) != 0)):
                 self._errHandler.recoverInline(self)
             else:
                 self._errHandler.reportMatch(self)
@@ -1388,12 +1393,12 @@ class UniContractGrammar ( Parser ):
             self.state = 224
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [36]:
+            if token in [37]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 219
                 self.qualifiedName()
                 pass
-            elif token in [28]:
+            elif token in [29]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 220
                 self.match(UniContractGrammar.EXTERNAL)
@@ -1705,22 +1710,22 @@ class UniContractGrammar ( Parser ):
             self.state = 259
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [36]:
+            if token in [37]:
                 self.enterOuterAlt(localctx, 1)
                 self.state = 255
                 self.qualifiedName()
                 pass
-            elif token in [33]:
+            elif token in [34]:
                 self.enterOuterAlt(localctx, 2)
                 self.state = 256
                 self.match(UniContractGrammar.INTEGER_CONSTANS)
                 pass
-            elif token in [34]:
+            elif token in [35]:
                 self.enterOuterAlt(localctx, 3)
                 self.state = 257
                 self.match(UniContractGrammar.NUMBER_CONSTANS)
                 pass
-            elif token in [35]:
+            elif token in [36]:
                 self.enterOuterAlt(localctx, 4)
                 self.state = 258
                 self.match(UniContractGrammar.STRING_LITERAL)
@@ -1956,7 +1961,7 @@ class UniContractGrammar ( Parser ):
             self.state = 281
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 278
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 283
@@ -1982,7 +1987,7 @@ class UniContractGrammar ( Parser ):
             self.state = 294
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 343597384704) != 0):
+            if (((_la) & ~0x3f) == 0 and ((1 << _la) & 687194768384) != 0):
                 self.state = 293
                 self.enum_element()
 
@@ -2063,7 +2068,7 @@ class UniContractGrammar ( Parser ):
             self.state = 308
             self._errHandler.sync(self)
             _la = self._input.LA(1)
-            while _la==38:
+            while _la==39:
                 self.state = 305
                 self.match(UniContractGrammar.DOCUMENT_LINE)
                 self.state = 310

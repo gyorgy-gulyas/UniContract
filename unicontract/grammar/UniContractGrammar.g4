@@ -62,6 +62,7 @@ type
         | 'string'
         | 'boolean'
         | 'bytes'
+        | 'stream'
         ;
 
     reference_type

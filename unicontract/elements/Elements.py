@@ -257,6 +257,7 @@ class primitive_type(type):
         String = 6,
         Boolean = 7,
         Bytes = 8,
+        Stream = 8,
 
 
 class reference_type(type):

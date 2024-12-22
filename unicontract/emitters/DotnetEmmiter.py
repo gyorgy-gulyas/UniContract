@@ -126,7 +126,7 @@ class DotnetEmmiter:
         buffer.write(f"{self.tab(indent)}{{\n")
         for enum_element in enum.enum_elements:
             buffer.write(self.documentLines(enum_element, indent))
-            buffer.write(f"{self.tab(indent+1))}{enum_element.value},\n")
+            buffer.write(f"{self.tab(indent+1)}{enum_element.value},\n")
         buffer.write(f"{self.tab(indent)}}}\n")
         return buffer.getvalue()
 

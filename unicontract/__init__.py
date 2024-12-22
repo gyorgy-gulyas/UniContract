@@ -1,3 +1,7 @@
+from .grammar.UniContractGrammar import *
+from .grammar.UniContractLexer import *
+from .grammar.UniContractGrammarVisitor import *
+from .grammar.UniContractGrammarListener import *
 from .elements.ElementBuilder import *
 from .elements.Elements import *
 from .elements.ElementVisitor import *

@@ -1,0 +1,116 @@
+{
+    "$type": "contract",
+    "imports": [],
+    "namespaces": [
+        {
+            "$type": "namespace",
+            "name": "WebShop",
+            "decorators": [],
+            "enums": [],
+            "interfaces": [
+                {
+                    "$type": "interface",
+                    "decorators": [],
+                    "name": "Partner",
+                    "enums": [
+                        {
+                            "$type": "enum",
+                            "decorators": [],
+                            "name": "Kind",
+                            "enum_elements": [
+                                {
+                                    "$type": "enum_element",
+                                    "decorators": [],
+                                    "value": "PrivatePerson",
+                                    "document_lines": [],
+                                    "location": {
+                                        "fileName": ".\\sample\\partner.contract",
+                                        "line": 4,
+                                        "column": 12
+                                    }
+                                },
+                                {
+                                    "$type": "enum_element",
+                                    "decorators": [],
+                                    "value": "Company",
+                                    "document_lines": [],
+                                    "location": {
+                                        "fileName": ".\\sample\\partner.contract",
+                                        "line": 5,
+                                        "column": 12
+                                    }
+                                }
+                            ],
+                            "document_lines": [],
+                            "location": {
+                                "fileName": ".\\sample\\partner.contract",
+                                "line": 3,
+                                "column": 8
+                            }
+                        }
+                    ],
+                    "methods": [],
+                    "properties": [
+                        {
+                            "$type": "interface_property",
+                            "decorators": [],
+                            "name": "name",
+                            "type": {
+                                "$type": "primitive_type",
+                                "kind": "Kind.Primitive",
+                                "primtiveKind": "PrimtiveKind.String",
+                                "location": {
+                                    "fileName": ".\\sample\\partner.contract",
+                                    "line": 7,
+                                    "column": 22
+                                }
+                            },
+                            "isReadonly": false,
+                            "document_lines": [],
+                            "location": {
+                                "fileName": ".\\sample\\partner.contract",
+                                "line": 7,
+                                "column": 8
+                            }
+                        },
+                        {
+                            "$type": "interface_property",
+                            "decorators": [],
+                            "name": "kind",
+                            "type": {
+                                "$type": "reference_type",
+                                "kind": "Kind.Reference",
+                                "isExternal": false,
+                                "reference_name": "Kind",
+                                "location": {
+                                    "fileName": ".\\sample\\partner.contract",
+                                    "line": 8,
+                                    "column": 22
+                                }
+                            },
+                            "isReadonly": false,
+                            "document_lines": [],
+                            "location": {
+                                "fileName": ".\\sample\\partner.contract",
+                                "line": 8,
+                                "column": 8
+                            }
+                        }
+                    ],
+                    "document_lines": [],
+                    "location": {
+                        "fileName": ".\\sample\\partner.contract",
+                        "line": 2,
+                        "column": 4
+                    }
+                }
+            ],
+            "document_lines": [],
+            "location": {
+                "fileName": ".\\sample\\partner.contract",
+                "line": 1,
+                "column": 0
+            }
+        }
+    ]
+}

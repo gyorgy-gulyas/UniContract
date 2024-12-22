@@ -14,7 +14,7 @@ def read_requirements():
 # Setup function to package and distribute the Python project.
 setup(
     name='unicontract',  # The name of the package. This is what users will install via pip.
-    version='0.1.4',       # The version of the package, update as needed.
+    version='0.1.11',     # The version of the package, update as needed.
     
     # Automatically discover all the sub-packages (directories with __init__.py files).
     packages=find_packages(),  
@@ -25,7 +25,7 @@ setup(
     # Entry points define how the CLI tool is called from the command line.
     entry_points={
         'console_scripts': [
-            'unicontract = unicontract:main',  # When 'mycli' is run, it will call the main() function from 'unicontract.cli'.
+            'unicontract = unicontract.__main__:main',  # When 'unicontract' is run, it will call the main() function from 'unicontract.__main__'.
         ],
     },
 
@@ -47,6 +47,7 @@ setup(
     include_package_data=True,  # This will include the LICENSE file and other non-Python files in the package.
     package_data={
         'unicontract': [
+            './__main__.py',
             './*',
             'elements/*',
             'emitters/*',

@@ -2,8 +2,8 @@ import json
 import os
 from typing import Any, Dict
 from pathlib import Path
-from ..elements.Elements import *
-from ..Engine import Session
+from unicontract.elements.Elements import *
+from unicontract.Engine import Session
 
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):

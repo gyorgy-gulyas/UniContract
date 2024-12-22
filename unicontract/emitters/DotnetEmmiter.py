@@ -122,12 +122,12 @@ class DotnetEmmiter:
         buffer = io.StringIO()
         buffer.write("\n")
         buffer.write(self.documentLines(enum, indent))
-        buffer.write(f"{'\t'*indent}enum {enum.name}\n")
-        buffer.write(f"{'\t'*indent}{{\n")
+        buffer.write(f"{self.tab(indent)}enum {enum.name}\n")
+        buffer.write(f"{self.tab(indent)}{{\n")
         for enum_element in enum.enum_elements:
             buffer.write(self.documentLines(enum_element, indent))
             buffer.write(f"{'\t'*(indent+1)}{enum_element.value},\n")
-        buffer.write(f"{'\t'*indent}}}\n")
+        buffer.write(f"{self.tab(indent)}}}\n")
         return buffer.getvalue()
 
     def interfaceText(self, interface: interface, indent: int = 1):
@@ -137,8 +137,8 @@ class DotnetEmmiter:
         buffer = io.StringIO()
         buffer.write("\n")
         buffer.write(self.documentLines(interface, indent))
-        buffer.write(f"{'\t'*indent}interface {interface.name}\n")
-        buffer.write(f"{'\t'*indent}{{\n")
+        buffer.write(f"{self.tab(indent)}interface {interface.name}\n")
+        buffer.write(f"{self.tab(indent)}{{\n")
 
         # Process nested enums in the interface
         for enum in interface.enums:
@@ -153,7 +153,7 @@ class DotnetEmmiter:
         # Process methods in the interface
         for method in interface.methods:
             buffer.write(f"{self.methodText(method, indent+1)}")
-        buffer.write(f"{'\t'*indent}}}\n")
+        buffer.write(f"{self.tab(indent)}}}\n")
         return buffer.getvalue()
 
     def propertyText(self, property: interface_property, indent: int):
@@ -162,7 +162,7 @@ class DotnetEmmiter:
         """
         buffer = io.StringIO()
         buffer.write(self.documentLines(property, indent))
-        buffer.write(f"{'\t'*indent}public {self.typeText(property.type)} {property.name} {{ get; ")
+        buffer.write(f"{self.tab(indent)}public {self.typeText(property.type)} {property.name} {{ get; ")
         if not property.isReadonly:
             buffer.write("set;")
         buffer.write("}\n")
@@ -174,7 +174,7 @@ class DotnetEmmiter:
         """
         buffer = io.StringIO()
         buffer.write(self.documentLines(method, indent))
-        buffer.write(f"{'\t'*indent}")
+        buffer.write(f"{self.tab(indent)}")
 
         # Handle async and non-async methods with return types
         if method.return_type is not None:

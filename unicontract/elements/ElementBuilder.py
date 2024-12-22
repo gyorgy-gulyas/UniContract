@@ -1,7 +1,7 @@
 from decimal import Decimal
-from unicontract.grammar.UniContractGrammar import *
-from unicontract.grammar.UniContractGrammarVisitor import *
-from unicontract.elements.Elements import *
+from ..grammar.UniContractGrammar import *
+from ..grammar.UniContractGrammarVisitor import *
+from .Elements import *
 
 
 class ElementBuilder(UniContractGrammarVisitor):

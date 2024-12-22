@@ -1,6 +1,6 @@
 import unittest
-import unicontract
-from unicontract.emitters import *
+from unicontract import *
+from unicontract.emitters.JsonEmitter import *
 import jsondiff
 
 

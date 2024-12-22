@@ -1,6 +1,6 @@
 from typing import Any, Dict
-from unicontract.elements.Elements import *
-from unicontract import *
+from ..elements.ElementVisitor import *
+from ..Engine import *
 
 
 def DoLint(session: Session, output_dir: str, args: Dict[str, str]):

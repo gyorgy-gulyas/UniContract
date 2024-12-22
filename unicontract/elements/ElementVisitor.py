@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Any
-from unicontract.elements.Elements import *
+from .Elements import *
 
 class ElementVisitor:
 

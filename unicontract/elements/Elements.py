@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List
 from enum import Enum
-from unicontract.elements.ElementVisitor import *
+from .ElementVisitor import *
 
 class IScope:
     def getChildren(self) -> List[base_element]:

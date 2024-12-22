@@ -1,8 +1,8 @@
 import os
 import io
 from typing import Dict
-from unicontract.elements.Elements import *
-from unicontract.Engine import *
+from ..elements.Elements import *
+from ..Engine import *
 
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):

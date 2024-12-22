@@ -1,9 +1,9 @@
 import json
 import os
 from typing import Any, Dict
-import unicontract.elements.ElementVisitor
-from unicontract.elements.Elements import *
-from unicontract.Engine import Session
+from pathlib import Path
+from ..elements.Elements import *
+from ..Engine import Session
 
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
@@ -11,23 +11,24 @@ def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
 
     indent = 4
     if "json.indent" in configuration:
-        indent = int(configuration["indent"])
+        indent = int(configuration["json.indent"])
 
     ensure_ascii = True
     if "json.ensure_ascii" in configuration:
-        ensure_ascii = bool(configuration["ensure_ascii"])
+        ensure_ascii = bool(configuration["json.ensure_ascii"])
 
     sort_keys = False
     if "json.sort_keys" in configuration:
-        sort_keys = bool(configuration["sort_keys"])
+        sort_keys = bool(configuration["json.sort_keys"])
 
     json_result = jsonEmmiter.Emit(session, indent, ensure_ascii, sort_keys)
-    with open(os.path.join(output_dir, "main.json"), "w") as file:
+    json_path = os.path.join(output_dir, Path(session.source.fileName).stem + ".json")
+    with open(json_path, "w") as file:
         file.write(json_result)
     return json_result
 
 
-class JsonEmitter(unicontract.elements.ElementVisitor):
+class JsonEmitter(ElementVisitor):
     def __init__(self, withLocation: bool = True):
         self.dict = {}
         self.withLocation = withLocation
@@ -68,7 +69,7 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
         }
         parentData['enums'].append(data)
         return data
-    
+
     def visitEnumElement(self, enum_element: enum_element, parentData: Any) -> Any:
         data = {
             "$type": "enum_element",
@@ -129,7 +130,7 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
         }
         parentData[memberName] = data
         return data
-    
+
     def visitPrimitiveType(self, primtiveType: primitive_type, parentData: Any, memberName: str) -> Any:
         data = {
             "$type": "primitive_type",
@@ -210,3 +211,5 @@ class JsonEmitter(unicontract.elements.ElementVisitor):
             return None
 
 
+if __name__ == "__main__":
+    pass

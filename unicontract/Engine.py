@@ -1,9 +1,9 @@
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import *
-from unicontract.grammar.UniContractLexer import *
-from unicontract.grammar.UniContractGrammar import *
-from unicontract.elements.ElementBuilder import *
 from typing import Dict
+from .grammar.UniContractLexer import *
+from .grammar.UniContractGrammar import *
+from .elements.ElementBuilder import *
 
 
 class Source:

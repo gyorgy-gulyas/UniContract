@@ -1,0 +1,10 @@
+namespace WebShop {
+    interface Partner{
+        enum Kind{
+            PrivatePerson,
+            Company
+        }
+        property name:string
+        property kind:Kind
+    }
+}

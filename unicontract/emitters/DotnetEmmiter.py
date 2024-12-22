@@ -110,7 +110,9 @@ class DotnetEmmiter:
         """
         buffer = io.StringIO()
         for document_line in hinted_element.document_lines:
-            buffer.write(f"{'\t'*indent}///{document_line}\n")
+            buffer.write(f"{'\t'*indent}///{document_line}")
+            buffer.write("\n")
+            
         return buffer.getvalue()
 
     def enumText(self, enum: enum, indent: int = 1):

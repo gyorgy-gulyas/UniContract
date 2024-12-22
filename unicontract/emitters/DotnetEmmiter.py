@@ -38,14 +38,14 @@ class DotnetEmmiter:
 
             # Process all enums in the namespace
             for enum in namespace.enums:
-                content: str = self.beginFile(namespace)
+                content: str = self.beginFile(namespace, session)
                 content += self.enumText(enum, indent=1)
                 content += self.endFile(namespace)
                 result.append(dotnet_code(path, enum.name, content))
 
             # Process all interfaces in the namespace
             for interface in namespace.interfaces:
-                content: str = self.beginFile(namespace)
+                content: str = self.beginFile(namespace, session)
                 content += self.interfaceText(interface, indent=1)
                 content += self.endFile(namespace)
                 result.append(dotnet_code(path, interface.name, content))
@@ -69,7 +69,19 @@ class DotnetEmmiter:
 
         return "\n".join(using_statements) + "\n"
 
-    def beginFile(self, namespace: namespace) -> str:
+    def importsText(self, session: Session) -> str:
+        """
+        Returns the refrenced by import 'using' statements to be included in the .cs files.
+        """
+        buffer = io.StringIO()
+
+        for _import in session.main.imports:
+            buffer.write(self.documentLines(_import, indent=0))
+            buffer.write(f"using {_import.value};")
+
+        return buffer.getvalue()
+
+    def beginFile(self, namespace: namespace, session: Session) -> str:
         """
         Begins the file by writing the file header, usings, and namespace declaration.
         """
@@ -77,6 +89,7 @@ class DotnetEmmiter:
         buffer.write(self.fileHeader())
         buffer.write("\n")
         buffer.write(self.defaultUsings())
+        buffer.write(self.importsText(session))
         buffer.write("\n")
         buffer.write(f"namespace {namespace.name.getText()}\n")
         buffer.write("{\n")
@@ -241,7 +254,7 @@ class DotnetEmmiter:
         """
         Converts a list type to its .NET representation.
         """
-        return f"System.Generic.List<{self.typeText(type.item_type)}>" 
+        return f"System.Generic.List<{self.typeText(type.item_type)}>"
 
     def typeTextMap(self, type: map_type):
         """

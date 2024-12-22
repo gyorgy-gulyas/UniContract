@@ -85,10 +85,19 @@ class decorator_param(base_element):
         Number = 3
         String = 4
 
+class import_(hinted_base_element):
+    def __init__(self, fileName, pos):
+        super().__init__(fileName, pos)
+        self.kind = None
+        self.value: str = "" 
+
+    class Kind(Enum):
+        ContractNamespace = 1
+        ExternalNamespace = 2
 
 class contract(IScope):
     def __init__(self):
-        self.imports: List[contract] = []
+        self.imports: List[import_] = []
         self.namespaces: List[namespace] = []
 
     def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:

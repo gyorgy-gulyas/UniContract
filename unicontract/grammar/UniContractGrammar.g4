@@ -9,7 +9,8 @@ contract
     ;
 
 import_rule
-    : 'import' qualifiedName
+    : DOCUMENT_LINE* decorator* 'import' qualifiedName
+    | DOCUMENT_LINE* decorator* 'import' STRING_LITERAL
     ;
 
 namespace

@@ -94,24 +94,15 @@ class Engine:
         visitor = ElementBuilder(source.fileName)
 
         _contract: contract = visitor.visit(syntaxTree)
-        _imports: List[qualified_name] = []
 
-        counter = 0
-        while True:
-            import_rule = syntaxTree.import_rule((counter))
-            if (import_rule == None):
-                break
-            counter = counter + 1
-            _imports.append(visitor.visit(import_rule))
-
-        for _import in _imports:
-            if (_import.getText() in session.imports):
-                imported_contract = session.imports[_import.getText()]
+        for _import in _contract.imports:
+            if( _import.kind == import_.Kind.ExternalNamespace):
+                continue
+            if (_import in session.imports):
+                imported_contract = session.imports[_import]
             else:
-                imported_contract = self.__import_contract(_import, session)
-                session.imports[_import.getText()] = imported_contract
-
-            _contract.imports.append(imported_contract)
+                imported_contract = self.__import_contract(_import.value, session)
+                session.imports[_import] = imported_contract
 
         return _contract
 

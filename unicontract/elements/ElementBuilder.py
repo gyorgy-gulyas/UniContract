@@ -14,6 +14,14 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         counter = 0
         while True:
+            import_rule = ctx.import_rule((counter))
+            if (import_rule == None):
+                break
+            counter = counter + 1
+            self.elementTree.imports.append(self.visit(import_rule))
+
+        counter = 0
+        while True:
             namespace = ctx.namespace((counter))
             if (namespace == None):
                 break
@@ -24,12 +32,38 @@ class ElementBuilder(UniContractGrammarVisitor):
 
     # Visit a parse tree produced by UniContractGrammar#import_rule.
     def visitImport_rule(self, ctx: UniContractGrammar.Import_ruleContext):
-        return self.visit(ctx.qualifiedName())
+        result = import_(self.fileName, ctx.start)
+
+        counter = 0
+        while True:
+            decorator = ctx.decorator((counter))
+            if (decorator == None):
+                break
+            counter = counter + 1
+            child = self.visit(decorator)
+            child.parent = result
+            result.decorators.append(child)
+
+        counter = 0
+        while True:
+            document_line = ctx.DOCUMENT_LINE((counter))
+            if (document_line == None):
+                break
+            counter = counter + 1
+            result.document_lines.append(document_line.getText()[1:])
+
+        if (ctx.qualifiedName() != None):
+            result.kind = import_.Kind.ContractNamespace
+            result.value = self.visit(ctx.qualifiedName()).getText()
+        else:
+            result.kind = import_.Kind.ExternalNamespace
+            result.value = ctx.STRING_LITERAL().getText().strip('"')
+        
+        return result
 
     # Visit a parse tree produced by UniContractGrammar#namespace.
     def visitNamespace(self, ctx: UniContractGrammar.NamespaceContext):
         result: namespace = namespace(self.fileName, ctx.start)
-        ctx.start.line
         if (ctx.qualifiedName() != None):
             result.name = self.visit(ctx.qualifiedName())
 

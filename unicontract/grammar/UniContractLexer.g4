@@ -59,6 +59,5 @@ IDENTIFIER: [a-z][a-z_0-9]*;
 WS: [ \t\n\r\f]+ -> skip;
 
 DOCUMENT_LINE: '#' ~[\r\n]*;
-
 LINE_COMMENT: '//' ~[\r\n]* -> channel(COMMENT_CHANNEL);
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(COMMENT_CHANNEL);

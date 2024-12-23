@@ -4,7 +4,8 @@ import json
 from typing import Dict
 import importlib.util
 from pathlib import Path
-from unicontract import *
+from Engine import *
+from linters.SemanticChecker import *
 
 # Adds known arguments to the argument parser
 def __add_known_arguments(arg_parser: argparse.ArgumentParser):
@@ -23,9 +24,9 @@ def __add_known_arguments(arg_parser: argparse.ArgumentParser):
     # Emitter files argument, multiple files can be specified
     arg_parser.add_argument("-e",
                             "--emitter",
-                            help="used emitter file, if you specify multiple files, all emitters will be called",
+                            help="used emitter(s), if you specify multiple emitter, then all emitters will be called. The emmiter can a built-oin emitter (json,dotnet,java) or can a emitter pyton file",
                             nargs='+',
-                            default=["./unicontract/emitters/JsonEmitter.py"])
+                            default=[] )
     # Output directory argument
     arg_parser.add_argument("-o",
                             "--output-dir",
@@ -40,12 +41,14 @@ def __add_known_arguments(arg_parser: argparse.ArgumentParser):
     # Abort on error flag, execution stops if any error occurs
     arg_parser.add_argument("-aoe",
                             "--abort-on-error",
-                            help="when any file has an error, or any of the linters reports an error, then no emitter will be called and execution is aborted",
+                            help="when any file has an error, or any of the linters reports an error, then no emitter will be called and execution is aborted. Default value is True",
+                            default="True",
                             action="store_true")
     # Abort on warning flag, execution stops if any warning occurs
     arg_parser.add_argument("-aow",
                             "--abort-on-warning",
-                            help="when any file has a warning, or any of the linters reports a warning, then no emitter will be called and execution is aborted",
+                            help="when any file has a warning, or any of the linters reports a warning, then no emitter will be called and execution is aborted. Default value is False",
+                            default="False",
                             action="store_true")
     # Config file argument, defines the configuration in JSON format
     arg_parser.add_argument("-c",
@@ -119,7 +122,10 @@ def __check_errors(session: Session, args, action: str):
 # Calls the linters specified in the arguments
 def __call_linters(session: Session, args, configuration: Dict[str, str]):
     """Call the linters for the session."""
+
     # Call the default semantic checker linter
+    if (args.verbose):
+        print(f"information: calling 'SemanticChecker")
     defaultChecker = SemanticChecker(session)
     session.main.visit(defaultChecker, None)
 
@@ -128,14 +134,30 @@ def __call_linters(session: Session, args, configuration: Dict[str, str]):
         spec = importlib.util.spec_from_file_location(Path(linter_file).stem, linter_file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
+        if (args.verbose):
+            print(f"information: calling linter:'{linter_file}'")
         module.DoLint(session, configuration)
 
 # Calls the emitters specified in the arguments
 def __call_emiters(session: Session, args, configuration: Dict[str, str]):
     """Call the emitters for the session."""
+
     # Execute each emitter file provided in the arguments
-    for emitter_file in args.emitter:
-        spec = importlib.util.spec_from_file_location(Path(emitter_file).stem, emitter_file)
+    for emitter_name in args.emitter:
+        if (args.verbose):
+            print(f"information: calling emitter:'{emitter_name}'")
+        
+        match emitter_name:
+            case "dotnet":
+                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/DotnetEmitter.py"))
+            case "json":
+                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JsonEmitter.py"))
+            case "java":
+                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JavaEmitter.py"))
+                pass
+            case _:
+                spec = importlib.util.spec_from_file_location(Path(emitter_name).stem, emitter_name)
+
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         module.DoEmit(session, args.output_dir, configuration)

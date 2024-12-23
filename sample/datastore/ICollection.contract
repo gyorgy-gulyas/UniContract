@@ -1,0 +1,12 @@
+import IDataStore
+
+namespace DataStoring {
+
+    interface ICollection {
+        readonly property DataStore:IDataStore
+
+        async method Insert( entity: string ) => boolean
+        async method Update( entity: string ) => boolean
+        async method Delete( entity: string ) => boolean
+    }
+}

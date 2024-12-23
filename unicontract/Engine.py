@@ -1,8 +1,10 @@
+import os
+from pathlib import Path
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import *
 from typing import Dict
-from unicontract.grammar import *
-from unicontract.elements.ElementBuilder import *
+from grammar import *
+from elements.ElementBuilder import *
 
 
 class Source:
@@ -20,7 +22,7 @@ class Source:
     @staticmethod
     def CreateFromFile(fileName):
         source = Source()
-        source.fileName = fileName
+        source.fileName = os.path.normpath(os.path.abspath(fileName))
         with open(fileName, 'r') as file:
             source.content = file.read()
         return source
@@ -32,7 +34,7 @@ class Session:
         self.syntaxTree: UniContractGrammar.ContractContext = []
         self.diagnostics: List[Diagnostic] = []
         self.main: contract = None
-        self.imports: Dict[str, contract] = {}
+        self.all: Dict[str, contract] = {}
 
     def HasDiagnostic(self):
         if (len(self.diagnostics) > 0):
@@ -53,7 +55,7 @@ class Session:
 
     def PrintDiagnostics(self):
         for msg in self.diagnostics:
-            print(f"{msg.toText()}\n")
+            print(f"{msg.toText()}")
 
     def ClearDiagnostics(self):
         self.diagnostics.clear()
@@ -69,7 +71,7 @@ class Session:
 
 
 class Engine:
-    def __init__(self, configuration: Dict[str, str]={}):
+    def __init__(self, configuration: Dict[str, str] = {}):
         self.configuration: Dict[str, str] = configuration
 
     def Build(self, session: Session):
@@ -93,51 +95,58 @@ class Engine:
         visitor = ElementBuilder(source.fileName)
 
         _contract: contract = visitor.visit(syntaxTree)
+        session.all[source.fileName] = _contract
 
         for _import in _contract.imports:
-            if( _import.kind == import_.Kind.ExternalNamespace):
+            if (_import.kind == import_.Kind.ExternalNamespace):
                 continue
-            if (_import in session.imports):
-                imported_contract = session.imports[_import]
-            else:
-                imported_contract = self.__import_contract(_import.value, session)
-                session.imports[_import] = imported_contract
+            import_path = os.path.normpath(os.path.join(Path(source.fileName).parent, _import.value+".contract"))
+            if (import_path not in session.all):
+                self.__import_contract(import_path, _import, session)
 
         return _contract
 
-    def __import_contract(self, import_name: qualified_name, session: Session):
-        import_source = Source.CreateFromFile(import_name.getText()+".contract")
+    def __import_contract(self, import_path: str, _import: import_, session: Session):
+        if (os.path.exists(import_path) == False):
+            session.ReportDiagnostic(f"import '{import_path}' file not found", Diagnostic.Severity.Error, _import.fileName, _import.line, _import.column)
+
+        import_source = Source.CreateFromFile(import_path)
         import_syntaxTree = self.__create_syntax_tree(import_source, session)
         import_contract = self.__create_element_tree(import_syntaxTree, import_source, session)
 
         return import_contract
 
-    def __merge_contracts( self, session: Session ):
+    def __merge_contracts(self, session: Session):
 
-        for imported_contract in session.imports.values():
-            if(imported_contract is session.main):
+        for imported_contract in session.all.values():
+            if (imported_contract is session.main):
                 continue
 
             for imported_namespace in imported_contract.namespaces:
                 # find domain in merged
-                namespace_already: namespace = self.__find_namespace_by_name(imported_namespace.name,session)
+                namespace_already: namespace = self.__find_namespace_by_name(imported_namespace.name, session)
                 if (namespace_already == None):
                     # append domain to merged
                     session.main.namespaces.append(imported_namespace)
                 else:
-                    # merge event and contexts to merged
-                    namespace_already.enums.extend(imported_namespace.enums)
-                    namespace_already.interfaces.extend(imported_namespace.interfaces)
+                    # merge enums
+                    for imported_enum in imported_namespace.enums:
+                        imported_enum.parent = namespace_already
+                        namespace_already.enums.append(imported_enum)
+
+                    # merge interfaces
+                    for imported_interface in imported_namespace.interfaces:
+                        imported_interface.parent = namespace_already
+                        namespace_already.interfaces.append(imported_interface)
 
         return session.main
-    
-    def __find_namespace_by_name(namespace_name:qualified_name,session: Session):
+
+    def __find_namespace_by_name(self, namespace_name: qualified_name, session: Session):
         for namespace in session.main.namespaces:
             if (namespace.name.getText() == namespace_name.getText()):
                 return namespace
 
         return None
-      
 
     class __syntaxErrorListener__(ErrorListener):
         def __init__(self, fileName, session: Session):
@@ -158,7 +167,7 @@ class Diagnostic:
         self.message: int = None
 
     def toText(self):
-        return f"{self.fileName}({self.line},{self.column}): {self.severity} :{self.message}\n"
+        return f"{self.fileName}({self.line},{self.column}): {self.severity} :{self.message}"
 
     class Severity(Enum):
         Message = 1,

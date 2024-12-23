@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 from tests.dotnet_code_helper import *
-from unicontract.emitters.DotnetEmmiter import *
+from unicontract.emitters.DotnetEmitter import *
 
 
 class TestEmitterDotnetDefault(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestEmitterDotnetDefault(unittest.TestCase):
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 0)
 
@@ -27,7 +27,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 0)
 
@@ -41,12 +41,12 @@ namespace SomeNamespace.SubNameSpace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter(configuration={"dotnet.create_folder_structure": True})
+        emitter = DotnetEmitter(configuration={"dotnet.create_folder_structure": True})
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         self.assertEqual(Path(result[0].fullPath), Path("./SomeNamespace/SubNameSpace/Empty.cs"))
 
-        emitter = DotnetEmmiter(configuration={"dotnet.create_folder_structure": False})
+        emitter = DotnetEmitter(configuration={"dotnet.create_folder_structure": False})
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         self.assertEqual(Path(result[0].fullPath), Path("./Empty.cs"))
@@ -63,7 +63,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
 
@@ -82,7 +82,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -123,7 +123,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -169,7 +169,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -203,7 +203,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -242,7 +242,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -312,7 +312,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """
@@ -390,7 +390,7 @@ namespace SomeNamespace{
         root = engine.Build(session)
         self.assertFalse(session.HasAnyError())
 
-        emitter = DotnetEmmiter()
+        emitter = DotnetEmitter()
         result = emitter.Emit(session)
         self.assertEqual(len(result), 1)
         expected = """

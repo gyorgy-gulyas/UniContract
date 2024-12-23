@@ -1,7 +1,8 @@
+from __future__ import annotations
 from decimal import Decimal
-from ..grammar.UniContractGrammar import *
-from ..grammar.UniContractGrammarVisitor import *
-from .Elements import *
+from grammar.UniContractGrammar import *
+from grammar.UniContractGrammarVisitor import *
+from elements.Elements import *
 
 
 class ElementBuilder(UniContractGrammarVisitor):

@@ -11,7 +11,7 @@
             "justMyCode": false,
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-i", "sample/partner.contract", "-v"],
+            "args": ["-i", "sample/datastore/IDataStore.contract", "--verbose", "--output-dir", "sample/datastore/dotnet/", "--emitter", "dotnet" ],
             "envFile": "${workspaceRoot}/.env"
         }
     ]

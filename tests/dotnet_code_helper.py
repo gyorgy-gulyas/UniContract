@@ -2,7 +2,7 @@ from io import StringIO
 import os
 import tempfile
 from unicontract import *
-from unicontract.emitters.DotnetEmmiter import *
+from unicontract.emitters.DotnetEmitter import *
 
 
 class dotnet_code_helper:

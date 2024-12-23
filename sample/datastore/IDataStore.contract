@@ -1,0 +1,14 @@
+import IConnection
+import ICollection
+
+namespace DataStoring {
+
+    interface IDataStore {
+        readonly property Connection: IConnection
+
+        async method IsCollectionExists( collectionName: string ) => boolean
+        async method GetCollectionByName(collectionName: string) => ICollection
+        async method CreateCollection(collectionName: string) => ICollection
+        async method DropCollection(collection: ICollection) => ICollection
+    }
+}

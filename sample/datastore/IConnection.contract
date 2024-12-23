@@ -1,0 +1,13 @@
+import IDataStore
+
+namespace DataStoring {
+
+    interface IConnection {
+        readonly property ProviderName:string
+
+        async method IsDataStoreExists( storeName: string ) => boolean
+        async method GetDataStoreByName(storeName: string ) => IDataStore
+        async method CreateDataStore( storeName: string ) => IDataStore
+        async method DropDataStore( dataStore: IDataStore ) => IDataStore
+    }
+}

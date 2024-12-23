@@ -14,7 +14,7 @@ def read_requirements():
 # Setup function to package and distribute the Python project.
 setup(
     name='unicontract',  # The name of the package. This is what users will install via pip.
-    version='0.1.11',     # The version of the package, update as needed.
+    version='0.1.12',     # The version of the package, update as needed.
     
     # Automatically discover all the sub-packages (directories with __init__.py files).
     packages=find_packages(),  

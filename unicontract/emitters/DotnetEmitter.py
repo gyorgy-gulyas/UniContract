@@ -1,8 +1,8 @@
 import os
 import io
 from typing import Dict
-from ..elements.Elements import *
-from ..Engine import *
+from elements.Elements import *
+from Engine import *
 
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
@@ -10,13 +10,23 @@ def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
     Creates an instance of DotnetEmmiter, initializes it with the output directory and configuration,
     and then emits the dotnet code based on the provided session.
     """
-    dotnetEmmiter = DotnetEmmiter(output_dir, configuration)
+    dotnetEmmiter = DotnetEmitter(output_dir, configuration)
 
     # Generate the .NET code for the session
-    result: List[dotnet_code] = dotnetEmmiter.Emit(session)
+    results: List[dotnet_code] = dotnetEmmiter.Emit(session)
+
+    for code in results:
+        dir_name = os.path.dirname(code.fullPath)
+        if dir_name and not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+
+        with open(code.fullPath, "w") as file:
+            file.write(code.content)
+
+    return results
 
 
-class DotnetEmmiter:
+class DotnetEmitter:
     def __init__(self, output_dir: str = "./", configuration: Dict[str, str] = {}):
         """
         Initializes the DotnetEmmiter instance with the provided output directory and configuration.
@@ -266,8 +276,9 @@ class DotnetEmmiter:
         """
         return f"System.Generic.Dictionary<{self.typeText(type.key_type)},{self.typeText(type.value_type)}>"
 
-    def tab(self,indent=1):
+    def tab(self, indent=1):
         return '\t'*indent
+
 
 class utils:
     @staticmethod
@@ -344,3 +355,7 @@ class dotnet_code:
         self.fileName: str = name + ".cs"
         self.fullPath: str = os.path.join(directory, self.fileName)
         self.content: str = content
+
+
+if __name__ == "__main__":
+    pass

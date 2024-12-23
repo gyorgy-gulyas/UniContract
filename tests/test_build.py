@@ -1,3 +1,4 @@
+from __future__ import annotations
 import unittest
 from unicontract.Engine import *
 from unicontract.elements.Elements import *
@@ -9,6 +10,8 @@ class TestBuild(unittest.TestCase):
         engine = Engine()
         session = Session(Source.CreateFromText(""))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         self.assertIsInstance(root, contract)
         self.assertEqual(0, len(root.namespaces))
 
@@ -18,6 +21,8 @@ class TestBuild(unittest.TestCase):
 // line comment 1
 // line comment 1"""))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         self.assertIsInstance(root, contract)
         self.assertEqual(0, len(root.namespaces))
 
@@ -27,6 +32,8 @@ class TestBuild(unittest.TestCase):
 /* comment 1
   comment 1*/"""))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         self.assertIsInstance(root, contract)
         self.assertEqual(0, len(root.namespaces))
 
@@ -37,6 +44,8 @@ namespace someNamespace{
 }
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         self.assertIsInstance(root, contract)
         element: namespace = root.namespaces[0]
         self.assertEqual(element.line, 2)
@@ -51,6 +60,8 @@ namespace someNamespace{
 namespace someNamespace {}
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         self.assertIsInstance(root, contract)
         self.assertEqual(1, len(root.namespaces))
         namespace: namespace = root.namespaces[0]
@@ -58,7 +69,7 @@ namespace someNamespace {}
         self.assertEqual(namespace.document_lines[0], "doc line 1")
         self.assertEqual(namespace.document_lines[1], "doc line 2")
 
-    def test_enum(self):
+    def test_enum_ok(self):
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace someNamespace {
@@ -72,6 +83,8 @@ namespace someNamespace {
 }
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         namespace: namespace = root.namespaces[0]
         enum: enum = namespace.enums[0]
         self.assertEqual(enum.name, "WeekDays")
@@ -82,7 +95,7 @@ namespace someNamespace {
         self.assertEqual(enum.enum_elements[3].value, "Thursday")
         self.assertEqual(enum.enum_elements[4].value, "Friday")
 
-    def test_interface_inner_enum(self):
+    def test_interface_inner_enum_ok(self):
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace someNamespace {
@@ -95,6 +108,8 @@ namespace someNamespace {
 }
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         namespace: namespace = root.namespaces[0]
         interface: interface = namespace.interfaces[0]
         self.assertEqual(interface.name, "Address")
@@ -103,7 +118,7 @@ namespace someNamespace {
         self.assertEqual(enum_inner.name, "InnerEnum")
         self.assertEqual(len(enum_inner.enum_elements), 2)
 
-    def test_interface_property(self):
+    def test_interface_property_ok(self):
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace someNamespace {
@@ -116,6 +131,8 @@ namespace someNamespace {
 }
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         namespace: namespace = root.namespaces[0]
         interface: interface = namespace.interfaces[0]
         self.assertEqual(len(interface.properties), 4)
@@ -144,7 +161,7 @@ namespace someNamespace {
         self.assertEqual(property.type.kind, type.Kind.Primitive)
         self.assertEqual(property.type.primtiveKind, primitive_type.PrimtiveKind.String)
 
-    def test_interface_method(self):
+    def test_interface_method_ok(self):
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace someNamespace {
@@ -156,6 +173,8 @@ namespace someNamespace {
 }
 """))
         root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
         namespace: namespace = root.namespaces[0]
         interface: interface = namespace.interfaces[0]
         self.assertEqual(len(interface.properties), 0)
@@ -188,6 +207,100 @@ namespace someNamespace {
         self.assertEqual(param.name, "id")
         self.assertEqual(param.type.kind, type.Kind.Primitive)
         self.assertEqual(param.type.primtiveKind, primitive_type.PrimtiveKind.String)
+
+    def test_interface_generic_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    interface Normal {
+    }
+    interface Generic1<T> {
+    }
+    interface Generic2<T1,T2> {
+    }
+    interface Generic3<T extends Normal> {
+    }
+}
+"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        namespace: namespace = root.namespaces[0]
+        self.assertEqual(len(namespace.interfaces), 4)
+
+        interface: interface = namespace.interfaces[0]
+        self.assertEqual(interface.name, "Normal")
+        self.assertIsNone(interface.generic)
+
+        interface: interface = namespace.interfaces[1]
+        self.assertEqual(interface.name, "Generic1")
+        self.assertIsNotNone(interface.generic)
+        self.assertEqual(len(interface.generic.types), 1)
+        self.assertEqual(interface.generic.types[0].type_name, "T")
+        self.assertEqual(interface.generic.types[0].extends, None)
+
+        interface: interface = namespace.interfaces[2]
+        self.assertEqual(interface.name, "Generic2")
+        self.assertIsNotNone(interface.generic)
+        self.assertEqual(len(interface.generic.types), 2)
+        self.assertEqual(interface.generic.types[0].type_name, "T1")
+        self.assertEqual(interface.generic.types[0].extends, None)
+        self.assertEqual(interface.generic.types[1].type_name, "T2")
+        self.assertEqual(interface.generic.types[1].extends, None)
+
+        interface: interface = namespace.interfaces[3]
+        self.assertEqual(interface.name, "Generic3")
+        self.assertIsNotNone(interface.generic)
+        self.assertEqual(len(interface.generic.types), 1)
+        self.assertEqual(interface.generic.types[0].type_name, "T")
+        self.assertEqual(interface.generic.types[0].extends.getText(), "Normal")
+
+    def test_interface_generic_method_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    interface Generic {
+        method Func1()
+        method Func2<T>()
+        method Func3<T1,T2>()
+        method Func4<T extends Normal>()
+    }
+}
+"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        namespace: namespace = root.namespaces[0]
+        self.assertEqual(len(namespace.interfaces), 1)
+        interface: interface = namespace.interfaces[0]
+
+        method: interface_method = interface.methods[0]
+        self.assertEqual(method.name, "Func1")
+        self.assertEqual(method.generic, None)
+
+        method: interface = interface.methods[1]
+        self.assertEqual(method.name, "Func2")
+        self.assertIsNotNone(method.generic)
+        self.assertEqual(len(method.generic.types), 1)
+        self.assertEqual(method.generic.types[0].type_name, "T")
+        self.assertEqual(method.generic.types[0].extends, None)
+
+        method: interface = interface.methods[2]
+        self.assertEqual(method.name, "Func3")
+        self.assertIsNotNone(method.generic)
+        self.assertEqual(len(method.generic.types), 2)
+        self.assertEqual(method.generic.types[0].type_name, "T1")
+        self.assertEqual(method.generic.types[0].extends, None)
+        self.assertEqual(method.generic.types[1].type_name, "T2")
+        self.assertEqual(method.generic.types[1].extends, None)
+
+        method: interface = interface.methods[3]
+        self.assertEqual(method.name, "Func4")
+        self.assertIsNotNone(method.generic)
+        self.assertEqual(len(method.generic.types), 1)
+        self.assertEqual(method.generic.types[0].type_name, "T")
+        self.assertEqual(method.generic.types[0].extends.getText(), "Normal")
+
 
 if __name__ == "__main__":
     unittest.main()

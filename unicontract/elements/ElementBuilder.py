@@ -4,7 +4,6 @@ from unicontract.grammar.UniContractGrammarVisitor import *
 from unicontract.elements.Elements import *
 
 
-
 class ElementBuilder(UniContractGrammarVisitor):
     def __init__(self, fileName: str):
         self.elementTree = contract()
@@ -15,18 +14,20 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         counter = 0
         while True:
-            import_rule = ctx.import_rule((counter))
+            import_rule: import_ = ctx.import_rule((counter))
             if (import_rule == None):
                 break
             counter = counter + 1
+            import_rule.parent = self.elementTree
             self.elementTree.imports.append(self.visit(import_rule))
 
         counter = 0
         while True:
-            namespace = ctx.namespace((counter))
+            namespace: namespace = ctx.namespace((counter))
             if (namespace == None):
                 break
             counter = counter + 1
+            namespace.parent = self.elementTree
             self.elementTree.namespaces.append(self.visit(namespace))
 
         return self.elementTree
@@ -52,7 +53,9 @@ class ElementBuilder(UniContractGrammarVisitor):
     def visitNamespace(self, ctx: UniContractGrammar.NamespaceContext):
         result: namespace = namespace(self.fileName, ctx.start)
         if (ctx.qualifiedName() != None):
-            result.name = self.visit(ctx.qualifiedName())
+            name: qualified_name = self.visit(ctx.qualifiedName())
+            name.parent = result
+            result.name = name
 
         counter = 0
         while True:
@@ -90,8 +93,16 @@ class ElementBuilder(UniContractGrammarVisitor):
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
 
+        if (ctx.generic() != None):
+            value: generic = self.visit(ctx.generic())
+            value.parent = result
+            result.generic = value
+
         if (ctx.inherits() != None):
-            result.inherits = result.value = self.visit(ctx.inherits())
+            inherits: List[qualified_name] = self.visit(ctx.inherits())
+            for inherit in inherits:
+                inherit.parent = result
+            result.inherits = inherits
 
         counter = 0
         while True:
@@ -132,9 +143,12 @@ class ElementBuilder(UniContractGrammarVisitor):
         result = interface_property(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
+
         if (ctx.type_() != None):
-            result.type = self.visit(ctx.type_())
-            result.type.parent = result
+            type: type = self.visit(ctx.type_())
+            type.parent = result
+            result.type = type
+
         if (ctx.READONLY() != None):
             result.isReadonly = True
 
@@ -153,11 +167,19 @@ class ElementBuilder(UniContractGrammarVisitor):
         result = interface_method(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
+
         if (ctx.type_() != None):
-            result.return_type = self.visit(ctx.type_())
-            result.return_type.parent = result
+            return_type: type = self.visit(ctx.type_())
+            return_type.parent = result
+            result.return_type = return_type
+
         if (ctx.ASYNC() != None):
             result.isAsync = True
+
+        if (ctx.generic() != None):
+            value: generic = self.visit(ctx.generic())
+            value.parent = result
+            result.generic = value
 
         counter = 0
         while True:
@@ -184,9 +206,11 @@ class ElementBuilder(UniContractGrammarVisitor):
         result = interface_method_param(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
+
         if (ctx.type_() != None):
-            result.type = self.visit(ctx.type_())
-            result.type.parent = result
+            type: type = self.visit(ctx.type_())
+            type.parent = result
+            result.type = type
 
         counter = 0
         while True:
@@ -234,9 +258,16 @@ class ElementBuilder(UniContractGrammarVisitor):
     def visitReference_type(self, ctx: UniContractGrammar.Reference_typeContext):
         result = reference_type(self.fileName, ctx.start)
         result.kind = type.Kind.Reference
+
         if (ctx.qualifiedName() != None):
-            result.reference_name = self.visit(ctx.qualifiedName())
-            result.reference_name.parent = result
+            reference_name: qualified_name = self.visit(ctx.qualifiedName())
+            reference_name.parent = result
+            result.reference_name = reference_name
+
+        if (ctx.generic() != None):
+            value: generic = self.visit(ctx.generic())
+            value.parent = result
+            result.generic = value
 
         return result
 
@@ -244,7 +275,11 @@ class ElementBuilder(UniContractGrammarVisitor):
     def visitList_type(self, ctx: UniContractGrammar.List_typeContext):
         result = list_type(self.fileName, ctx.start)
         result.kind = type.Kind.List
-        result.item_type = self.visit(ctx.type_())
+
+        if (ctx.type_() != None):
+            item_type: type = self.visit(ctx.type_())
+            item_type.parent = result
+            result.item_type = item_type
 
         return result
 
@@ -252,8 +287,16 @@ class ElementBuilder(UniContractGrammarVisitor):
     def visitMap_type(self, ctx: UniContractGrammar.Map_typeContext):
         result = map_type(self.fileName, ctx.start)
         result.kind = type.Kind.Map
-        result.key_type = self.visit(ctx.type_(0))
-        result.value_type = self.visit(ctx.type_(1))
+
+        if (ctx.type_(0) != None):
+            key_type: type = self.visit(ctx.type_(0))
+            key_type.parent = result
+            result.key_type = key_type
+
+        if (ctx.type_(1) != None):
+            value_type: type = self.visit(ctx.type_(1))
+            value_type.parent = result
+            result.value_type = value_type
 
         return result
 
@@ -326,5 +369,36 @@ class ElementBuilder(UniContractGrammarVisitor):
             child: qualified_name = self.visit(base_class)
             child.parent = result
             result.append(child)
+
+        return result
+
+    # Visit a parse tree produced by UniContractGrammar#generic.
+    def visitGeneric(self, ctx:UniContractGrammar.GenericContext):
+        result = generic(self.fileName, ctx.start)
+        
+        counter = 0
+        while True:
+            generic_type = ctx.generic_type((counter))
+            if (generic_type == None):
+                break
+            counter = counter + 1
+            child:generic_type = self.visit(generic_type)
+            child.parent = result
+            result.types.append(child)
+
+        return result
+
+
+    # Visit a parse tree produced by UniContractGrammar#generic_type.
+    def visitGeneric_type(self, ctx:UniContractGrammar.Generic_typeContext):
+        result = generic_type(self.fileName, ctx.start)
+
+        if (ctx.IDENTIFIER() != None):
+            result.type_name = ctx.IDENTIFIER().getText()
+        
+        if( ctx.EXTENDS() != None):
+            extends:qualified_name = self.visit( ctx.qualifiedName())
+            extends.parent = result
+            result.extends = extends
 
         return result

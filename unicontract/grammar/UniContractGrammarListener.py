@@ -170,5 +170,23 @@ class UniContractGrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by UniContractGrammar#generic.
+    def enterGeneric(self, ctx:UniContractGrammar.GenericContext):
+        pass
+
+    # Exit a parse tree produced by UniContractGrammar#generic.
+    def exitGeneric(self, ctx:UniContractGrammar.GenericContext):
+        pass
+
+
+    # Enter a parse tree produced by UniContractGrammar#generic_type.
+    def enterGeneric_type(self, ctx:UniContractGrammar.Generic_typeContext):
+        pass
+
+    # Exit a parse tree produced by UniContractGrammar#generic_type.
+    def exitGeneric_type(self, ctx:UniContractGrammar.Generic_typeContext):
+        pass
+
+
 
 del UniContractGrammar

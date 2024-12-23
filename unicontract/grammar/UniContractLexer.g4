@@ -17,8 +17,9 @@ LCURLY: '{';
 RCURLY: '}';
 LBARCKET: '[';
 RBRACKET: ']';
-AT: '@';
 ARROW: '=>';
+LT: '<';
+GT: '>';
 
 // controls keywords
 IMPORT: 'import';
@@ -49,6 +50,7 @@ PROPERTY: 'property';
 METHOD: 'method';
 READONLY: 'readonly';
 ASYNC: 'async';
+EXTENDS: 'extends';
 
 // syntax controllers
 IDENTIFIER: [a-z][a-z_0-9]*;

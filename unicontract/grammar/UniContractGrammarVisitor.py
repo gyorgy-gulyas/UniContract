@@ -99,5 +99,15 @@ class UniContractGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by UniContractGrammar#generic.
+    def visitGeneric(self, ctx:UniContractGrammar.GenericContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by UniContractGrammar#generic_type.
+    def visitGeneric_type(self, ctx:UniContractGrammar.Generic_typeContext):
+        return self.visitChildren(ctx)
+
+
 
 del UniContractGrammar

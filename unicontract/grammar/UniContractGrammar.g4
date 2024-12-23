@@ -22,7 +22,7 @@ namespace_elements
     ;
    
 interface
-    : DOCUMENT_LINE* 'interface' IDENTIFIER inherits? '{' interface_element* '}'
+    : DOCUMENT_LINE* 'interface' IDENTIFIER generic? inherits? '{' interface_element* '}'
     ;
 
     interface_element
@@ -37,7 +37,7 @@ interface
 
    
         interface_method
-            : DOCUMENT_LINE* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
+            : DOCUMENT_LINE* 'async'? 'method' IDENTIFIER generic? '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
             ;
 
         interface_method_param
@@ -65,7 +65,7 @@ type
         ;
 
     reference_type
-        : qualifiedName
+        : qualifiedName generic?
         ;
 
     list_type
@@ -91,3 +91,12 @@ enum
     enum_element
         : DOCUMENT_LINE* IDENTIFIER
         ;
+
+generic
+    : '<' generic_type (',' generic_type )* '>'
+    ;
+
+    generic_type
+        : IDENTIFIER ('extends' qualifiedName)?
+        ;
+

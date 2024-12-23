@@ -190,6 +190,7 @@ namespace SomeDomain {
                 {
                     "$type": "interface",
                     "name": "Customer",
+                    "generic": {},
                     "enums": [
                         {
                             "$type": "enum",
@@ -276,6 +277,7 @@ namespace SomeNameSpace {
                 {
                     "$type": "interface",
                     "name": "PartnerAddress",
+                    "generic": {},
                     "enums": [],
                     "methods": [],
                     "properties": [
@@ -412,6 +414,7 @@ namespace someNamespace {
                 {
                     "$type": "interface",
                     "name": "CustomerService",
+                    "generic": {},
                     "enums": [],
                     "methods": [
                         {

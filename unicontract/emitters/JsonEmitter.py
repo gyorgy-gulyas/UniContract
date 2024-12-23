@@ -80,6 +80,7 @@ class JsonEmitter(ElementVisitor):
         data = {
             "$type": "interface",
             "name": interface.name,
+            "generic": {},
             "enums": [],
             "methods": [],
             "properties": [],
@@ -101,6 +102,7 @@ class JsonEmitter(ElementVisitor):
         data = {
             "$type": "interface_method",
             "name": interface_method.name,
+            "generic": {},
             "params": [],
             "return_type": {},
             "isAsync": interface_method.isAsync,
@@ -137,7 +139,8 @@ class JsonEmitter(ElementVisitor):
         data = {
             "$type": "reference_type",
             "kind": str(reference_type.kind),
-            "reference_name": str(reference_type.reference_name.getText())
+            "reference_name": str(reference_type.reference_name.getText()),
+            "generic": {}
         }
         parentData[memberName] = data
         return data
@@ -180,6 +183,20 @@ class JsonEmitter(ElementVisitor):
         else:
             return None
 
+    def visitGeneric(self, generic: generic, parentData: Any) -> Any:
+        data = {
+            "$type": "generic",
+            "types": [],
+        }
+        parentData["generic"] = data
+
+    def visitGenericType(self, generic_type: generic_type, parentData: Any) -> Any:
+        data = {
+            "$type": "generic_type",
+            "type_name": generic_type.type_name,
+            "extends": generic_type.extends.getText() if generic_type.extends != None else ""
+        }
+        parentData["generic"] = data
 
 if __name__ == "__main__":
     pass

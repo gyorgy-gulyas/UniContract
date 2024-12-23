@@ -3,9 +3,11 @@ from typing import List
 from enum import Enum
 from .ElementVisitor import *
 
+
 class IScope:
     def getChildren(self) -> List[base_element]:
         return []
+
 
 class base_element:
     def __init__(self, fileName, pos):
@@ -35,13 +37,14 @@ class hinted_base_element(base_element):
         return parentData
 
 
-class internal_scoped_base_element(hinted_base_element,IScope):
+class internal_scoped_base_element(hinted_base_element, IScope):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.enums: List[enum] = []
 
     def getChildren(self) -> List[base_element]:
         return self.enums
+
 
 class qualified_name(base_element):
     def __init__(self, fileName, pos):
@@ -51,10 +54,12 @@ class qualified_name(base_element):
     def getText(self):
         return '.'.join(self.names)
 
+
 class import_(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
-        self.value: str = "" 
+        self.value: str = ""
+
 
 class contract(IScope):
     def __init__(self):
@@ -66,9 +71,10 @@ class contract(IScope):
         for namespace in self.namespaces:
             namespace.visit(visitor, data)
         return data
-    
+
     def getChildren(self) -> List[base_element]:
         return self.namespaces
+
 
 class namespace(internal_scoped_base_element):
     def __init__(self, fileName, pos):
@@ -116,18 +122,22 @@ class interface(internal_scoped_base_element):
         super().__init__(fileName, pos)
         self.inherits: List[qualified_name] = []
         self.name: str = None
+        self.generic: generic = None
         self.methods: List[interface_method] = []
         self.properties: List[interface_property] = []
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitInterface(self, parentData)
         super().visit(visitor, data)
+        if (self.generic != None):
+            self.generic.visit(visitor, data)
         for property in self.properties:
             property.visit(visitor, data)
         for method in self.methods:
             method.visit(visitor, data)
         for internal_enum in self.enums:
             internal_enum.visit(visitor, data)
+
 
 class interface_property(hinted_base_element):
     def __init__(self, fileName, pos):
@@ -150,14 +160,18 @@ class interface_method(hinted_base_element):
         self.params: List[interface_method_param] = []
         self.return_type: type = None
         self.isAsync: bool = False
+        self.generic: generic = None
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitInterfaceMethod(self, parentData)
         super().visit(visitor, data)
+        if (self.generic != None):
+            self.generic.visit(visitor, data)
         for param in self.params:
             param.visit(visitor, data)
-        if(self.return_type != None):
-            self.return_type.visit(visitor, data,"return_type")
+        if (self.return_type != None):
+            self.return_type.visit(visitor, data, "return_type")
+
 
 class interface_method_param(hinted_base_element):
     def __init__(self, fileName, pos):
@@ -225,6 +239,7 @@ class reference_type(type):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.reference_name: qualified_name = None
+        self.generic: generic = None
 
 
 class list_type(type):
@@ -238,3 +253,25 @@ class map_type(type):
         super().__init__(fileName, pos)
         self.key_type = None
         self.value_type = None
+
+
+class generic(base_element):
+    def __init__(self, fileName, pos):
+        super().__init__(fileName, pos)
+        self.types: List[generic_type] = []
+
+    def visit(self, visitor: ElementVisitor, parentData: Any):
+        data = visitor.visitGeneric(self, parentData)
+        super().visit(visitor, data)
+        for type in self.types:
+            type.visit(visitor, data)
+
+class generic_type(base_element):
+    def __init__(self, fileName, pos):
+        super().__init__(fileName, pos)
+        self.type_name: str = ""
+        self.extends: qualified_name = None
+
+    def visit(self, visitor: ElementVisitor, parentData: Any):
+        data = visitor.visitGenericType(self, parentData)
+        super().visit(visitor, data)

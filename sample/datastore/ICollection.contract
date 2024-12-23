@@ -2,7 +2,7 @@ import IDataStore
 
 namespace DataStoring {
 
-    interface ICollection {
+    interface ICollection<T> {
         readonly property DataStore:IDataStore
 
         async method Insert( entity: string ) => boolean

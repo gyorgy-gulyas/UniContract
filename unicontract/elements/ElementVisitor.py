@@ -51,3 +51,9 @@ class ElementVisitor:
 
     def visitBaseElement(self, base_element: base_element, parentData: Any) -> Any:
         pass
+
+    def visitGeneric(self, generic: generic, parentData: Any) -> Any:
+        pass
+
+    def visitGenericType(self, generic_type: generic_type, parentData: Any) -> Any:
+        pass

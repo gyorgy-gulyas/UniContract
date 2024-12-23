@@ -4,8 +4,8 @@ import json
 from typing import Dict
 import importlib.util
 from pathlib import Path
-from Engine import *
-from linters.SemanticChecker import *
+from unicontract.Engine import *
+from unicontract.linters.SemanticChecker import *
 
 # Adds known arguments to the argument parser
 def __add_known_arguments(arg_parser: argparse.ArgumentParser):

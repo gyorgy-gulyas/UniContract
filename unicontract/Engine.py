@@ -3,8 +3,12 @@ from pathlib import Path
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import *
 from typing import Dict
-from grammar import *
-from elements.ElementBuilder import *
+print("---------")
+print(os.getcwd())
+print(__name__)
+print("---------")
+from unicontract.grammar import *
+from unicontract.elements.ElementBuilder import *
 
 
 class Source:

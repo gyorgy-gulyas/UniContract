@@ -134,24 +134,6 @@ class UniContractGrammarListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by UniContractGrammar#decorator.
-    def enterDecorator(self, ctx:UniContractGrammar.DecoratorContext):
-        pass
-
-    # Exit a parse tree produced by UniContractGrammar#decorator.
-    def exitDecorator(self, ctx:UniContractGrammar.DecoratorContext):
-        pass
-
-
-    # Enter a parse tree produced by UniContractGrammar#decorator_param.
-    def enterDecorator_param(self, ctx:UniContractGrammar.Decorator_paramContext):
-        pass
-
-    # Exit a parse tree produced by UniContractGrammar#decorator_param.
-    def exitDecorator_param(self, ctx:UniContractGrammar.Decorator_paramContext):
-        pass
-
-
     # Enter a parse tree produced by UniContractGrammar#qualifiedName.
     def enterQualifiedName(self, ctx:UniContractGrammar.QualifiedNameContext):
         pass

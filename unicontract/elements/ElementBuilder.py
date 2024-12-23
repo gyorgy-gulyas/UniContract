@@ -1,8 +1,8 @@
 from __future__ import annotations
-from decimal import Decimal
-from grammar.UniContractGrammar import *
-from grammar.UniContractGrammarVisitor import *
-from elements.Elements import *
+from unicontract.grammar.UniContractGrammar import *
+from unicontract.grammar.UniContractGrammarVisitor import *
+from unicontract.elements.Elements import *
+
 
 
 class ElementBuilder(UniContractGrammarVisitor):
@@ -37,16 +37,6 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         counter = 0
         while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
-
-        counter = 0
-        while True:
             document_line = ctx.DOCUMENT_LINE((counter))
             if (document_line == None):
                 break
@@ -59,7 +49,7 @@ class ElementBuilder(UniContractGrammarVisitor):
         else:
             result.kind = import_.Kind.ExternalNamespace
             result.value = ctx.STRING_LITERAL().getText().strip('"')
-        
+
         return result
 
     # Visit a parse tree produced by UniContractGrammar#namespace.
@@ -67,16 +57,6 @@ class ElementBuilder(UniContractGrammarVisitor):
         result: namespace = namespace(self.fileName, ctx.start)
         if (ctx.qualifiedName() != None):
             result.name = self.visit(ctx.qualifiedName())
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:
@@ -116,16 +96,6 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         if (ctx.inherits() != None):
             result.inherits = result.value = self.visit(ctx.inherits())
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:
@@ -174,16 +144,6 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         counter = 0
         while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
-
-        counter = 0
-        while True:
             document_line = ctx.DOCUMENT_LINE((counter))
             if (document_line == None):
                 break
@@ -202,16 +162,6 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.return_type.parent = result
         if (ctx.ASYNC() != None):
             result.isAsync = True
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:
@@ -241,16 +191,6 @@ class ElementBuilder(UniContractGrammarVisitor):
         if (ctx.type_() != None):
             result.type = self.visit(ctx.type_())
             result.type.parent = result
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:
@@ -340,58 +280,11 @@ class ElementBuilder(UniContractGrammarVisitor):
 
         return result
 
-    # Visit a parse tree produced by UniContractGrammar#decorator.
-    def visitDecorator(self, ctx: UniContractGrammar.DecoratorContext):
-        result = decorator(self.fileName, ctx.start)
-        if (ctx.IDENTIFIER() != None):
-            result.name = ctx.IDENTIFIER().getText()
-
-        counter = 0
-        while True:
-            param = ctx.decorator_param(counter)
-            if (param == None):
-                break
-            counter = counter + 1
-            child = self.visit(param)
-            child.parent = result
-            result.params.append(child)
-
-        return result
-
-    # Visit a parse tree produced by UniContractGrammar#decorator_param.
-    def visitDecorator_param(self, ctx: UniContractGrammar.Decorator_paramContext):
-        result = decorator_param(self.fileName, ctx.start)
-        if (ctx.qualifiedName() != None):
-            result.kind = decorator_param.Kind.QualifiedName
-            result.value = self.visit(ctx.qualifiedName())
-            result.value.parent = result
-        elif (ctx.INTEGER_CONSTANS() != None):
-            result.kind = decorator_param.Kind.Integer
-            result.value = int(ctx.INTEGER_CONSTANS().getText())
-        elif (ctx.NUMBER_CONSTANS() != None):
-            result.kind = decorator_param.Kind.Number
-            result.value = Decimal(ctx.NUMBER_CONSTANS().getText())
-        else:
-            result.kind = decorator_param.Kind.String
-            result.value = ctx.STRING_LITERAL().getText().strip('"')
-
-        return result
-
     # Visit a parse tree produced by UniContractGrammar#enum.
     def visitEnum(self, ctx: UniContractGrammar.EnumContext):
         result = enum(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.name = ctx.IDENTIFIER().getText()
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:
@@ -418,16 +311,6 @@ class ElementBuilder(UniContractGrammarVisitor):
         result = enum_element(self.fileName, ctx.start)
         if (ctx.IDENTIFIER() != None):
             result.value = ctx.IDENTIFIER().getText()
-
-        counter = 0
-        while True:
-            decorator = ctx.decorator((counter))
-            if (decorator == None):
-                break
-            counter = counter + 1
-            child = self.visit(decorator)
-            child.parent = result
-            result.decorators.append(child)
 
         counter = 0
         while True:

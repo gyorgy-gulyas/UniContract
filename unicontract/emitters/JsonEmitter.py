@@ -53,7 +53,6 @@ class JsonEmitter(ElementVisitor):
         data = {
             "$type": "namespace",
             "name": namespace.name.getText(),
-            "decorators": [],
             "enums": [],
             "interfaces": [],
         }
@@ -63,7 +62,6 @@ class JsonEmitter(ElementVisitor):
     def visitEnum(self, enum: enum, parentData: Any) -> Any:
         data = {
             "$type": "enum",
-            "decorators": [],
             "name": enum.name,
             "enum_elements": [],
         }
@@ -73,7 +71,6 @@ class JsonEmitter(ElementVisitor):
     def visitEnumElement(self, enum_element: enum_element, parentData: Any) -> Any:
         data = {
             "$type": "enum_element",
-            "decorators": [],
             "value": enum_element.value,
         }
         parentData['enum_elements'].append(data)
@@ -82,7 +79,6 @@ class JsonEmitter(ElementVisitor):
     def visitInterface(self, interface: interface, parentData: Any) -> Any:
         data = {
             "$type": "interface",
-            "decorators": [],
             "name": interface.name,
             "enums": [],
             "methods": [],
@@ -94,7 +90,6 @@ class JsonEmitter(ElementVisitor):
     def visitInterfaceProperty(self, interface_property: interface_property, parentData: Any) -> Any:
         data = {
             "$type": "interface_property",
-            "decorators": [],
             "name": interface_property.name,
             "type": {},
             "isReadonly": interface_property.isReadonly,
@@ -105,7 +100,6 @@ class JsonEmitter(ElementVisitor):
     def visitInterfaceMethod(self, interface_method: interface_method, parentData: Any) -> Any:
         data = {
             "$type": "interface_method",
-            "decorators": [],
             "name": interface_method.name,
             "params": [],
             "return_type": {},
@@ -117,7 +111,6 @@ class JsonEmitter(ElementVisitor):
     def visitInterfaceMethodParam(self, interface_method_param: interface_method_param, parentData: Any) -> Any:
         data = {
             "$type": "interface_method_param",
-            "decorators": [],
             "name": interface_method_param.name,
             "type": {},
         }
@@ -170,30 +163,8 @@ class JsonEmitter(ElementVisitor):
         return data
 
     def visitHintedElement(self, hinted_element: hinted_base_element, parentData: Any) -> Any:
-        parentData["decorators"] = []
         parentData["document_lines"] = []
         return parentData
-
-    def visitDecorator(self, decorator: decorator, parentData: Any) -> Any:
-        data = {
-            "$type": "decorator",
-            "name": decorator.name,
-            "params": [],
-        }
-        parentData["decorators"].append(data)
-        return data
-
-    def visitDecoratorParam(self, decorator_param: decorator_param, parentData: Any) -> Any:
-        data = {
-            "$type": "d3i.decorator_param",
-            "kind": str(decorator_param.kind),
-            "value": (
-                decorator_param.value.getText() if decorator_param.kind == decorator_param.Kind.QualifiedName else
-                str(decorator_param.value)
-            ),
-        }
-        parentData['params'].append(data)
-        return data
 
     def visitDocumentLine(self, document_line: str, parentData: Any) -> Any:
         parentData['document_lines'].append(document_line)

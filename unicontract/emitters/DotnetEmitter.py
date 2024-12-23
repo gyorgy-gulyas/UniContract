@@ -1,9 +1,9 @@
 import os
 import io
 from typing import Dict
-from elements.Elements import *
-from Engine import *
-
+from unicontract.elements.Elements import *
+from unicontract.Engine import *
+    
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
     """
@@ -201,7 +201,7 @@ class DotnetEmitter:
         buffer.write(f" {method.name}(")
 
         # Check if parameters should be broken into multiple lines
-        break_lines = any(param.document_lines for param in method.params) or any(param.decorators for param in method.params) or len(method.params) >= 5
+        break_lines = any(param.document_lines for param in method.params) or len(method.params) >= 5
 
         # Iterate over method parameters
         firstParam: bool = True

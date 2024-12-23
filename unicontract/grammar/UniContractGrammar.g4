@@ -9,12 +9,12 @@ contract
     ;
 
 import_rule
-    : DOCUMENT_LINE* decorator* 'import' qualifiedName
-    | DOCUMENT_LINE* decorator* 'import' STRING_LITERAL
+    : DOCUMENT_LINE* 'import' qualifiedName
+    | DOCUMENT_LINE* 'import' STRING_LITERAL
     ;
 
 namespace
-    : DOCUMENT_LINE* decorator* 'namespace' qualifiedName '{' namespace_elements* '}'
+    : DOCUMENT_LINE* 'namespace' qualifiedName '{' namespace_elements* '}'
     ;
 
 namespace_elements
@@ -23,7 +23,7 @@ namespace_elements
     ;
    
 interface
-    : DOCUMENT_LINE* decorator* 'interface' IDENTIFIER inherits? '{' interface_element* '}'
+    : DOCUMENT_LINE* 'interface' IDENTIFIER inherits? '{' interface_element* '}'
     ;
 
     interface_element
@@ -33,16 +33,16 @@ interface
         ;
         
         interface_property
-            : DOCUMENT_LINE* decorator* 'readonly'? 'property' IDENTIFIER ':' type
+            : DOCUMENT_LINE* 'readonly'? 'property' IDENTIFIER ':' type
             ;
 
    
         interface_method
-            : DOCUMENT_LINE* decorator* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
+            : DOCUMENT_LINE* 'async'? 'method' IDENTIFIER '(' (interface_method_param? (',' interface_method_param)*) ')' ('=>' type )?
             ;
 
         interface_method_param
-            : DOCUMENT_LINE* decorator* IDENTIFIER ':' type
+            : DOCUMENT_LINE* IDENTIFIER ':' type
             ;
 
 type
@@ -78,17 +78,6 @@ type
         : 'map' '[' type ',' type ']'
         ;
         
-decorator
-    : '@' IDENTIFIER
-    | '@' IDENTIFIER '(' decorator_param (',' decorator_param)* ')' ;
-    
-    decorator_param
-        : qualifiedName
-        | INTEGER_CONSTANS
-        | NUMBER_CONSTANS 
-        | STRING_LITERAL
-        ;
-
 qualifiedName 
     : IDENTIFIER ('.' IDENTIFIER)* 
     ;
@@ -98,9 +87,9 @@ inherits
     ;
 
 enum
-    : DOCUMENT_LINE* decorator* 'enum' IDENTIFIER '{' enum_element? (',' enum_element)* '}'
+    : DOCUMENT_LINE* 'enum' IDENTIFIER '{' enum_element? (',' enum_element)* '}'
     ;
 
     enum_element
-        : DOCUMENT_LINE* decorator* IDENTIFIER
+        : DOCUMENT_LINE* IDENTIFIER
         ;

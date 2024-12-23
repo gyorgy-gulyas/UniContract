@@ -1,6 +1,6 @@
 import unittest
-from unicontract import *
-
+from unicontract.Engine import *
+from unicontract.linters.SemanticChecker import *
 
 class TestLinterSemanticChecker(unittest.TestCase):
 

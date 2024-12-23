@@ -1,6 +1,10 @@
 from typing import Any, Dict
-from elements.ElementVisitor import *
-from Engine import *
+if( "." in __name__):
+    from ..elements.ElementVisitor import *
+    from ..Engine import *
+else:
+    from elements.ElementVisitor import *
+    from Engine import *
 
 
 def DoLint(session: Session, output_dir: str, args: Dict[str, str]):
@@ -97,12 +101,6 @@ class SemanticChecker(ElementVisitor):
         pass
 
     def visitDecoratedElement(self, decorated_element: hinted_base_element, parentData: Any) -> Any:
-        pass
-
-    def visitDecorator(self, decorator: decorator, parentData: Any) -> Any:
-        pass
-
-    def visitDecoratorParam(self, decorator_param: decorator_param, parentData: Any) -> Any:
         pass
 
     def visitBaseElement(self, base_element: base_element, parentData: Any) -> Any:

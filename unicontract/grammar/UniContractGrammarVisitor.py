@@ -79,16 +79,6 @@ class UniContractGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by UniContractGrammar#decorator.
-    def visitDecorator(self, ctx:UniContractGrammar.DecoratorContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by UniContractGrammar#decorator_param.
-    def visitDecorator_param(self, ctx:UniContractGrammar.Decorator_paramContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by UniContractGrammar#qualifiedName.
     def visitQualifiedName(self, ctx:UniContractGrammar.QualifiedNameContext):
         return self.visitChildren(ctx)

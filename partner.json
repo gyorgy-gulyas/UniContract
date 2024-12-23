@@ -5,22 +5,18 @@
         {
             "$type": "namespace",
             "name": "WebShop",
-            "decorators": [],
             "enums": [],
             "interfaces": [
                 {
                     "$type": "interface",
-                    "decorators": [],
                     "name": "Partner",
                     "enums": [
                         {
                             "$type": "enum",
-                            "decorators": [],
                             "name": "Kind",
                             "enum_elements": [
                                 {
                                     "$type": "enum_element",
-                                    "decorators": [],
                                     "value": "PrivatePerson",
                                     "document_lines": [],
                                     "location": {
@@ -31,7 +27,6 @@
                                 },
                                 {
                                     "$type": "enum_element",
-                                    "decorators": [],
                                     "value": "Company",
                                     "document_lines": [],
                                     "location": {
@@ -53,7 +48,6 @@
                     "properties": [
                         {
                             "$type": "interface_property",
-                            "decorators": [],
                             "name": "name",
                             "type": {
                                 "$type": "primitive_type",
@@ -75,7 +69,6 @@
                         },
                         {
                             "$type": "interface_property",
-                            "decorators": [],
                             "name": "kind",
                             "type": {
                                 "$type": "reference_type",

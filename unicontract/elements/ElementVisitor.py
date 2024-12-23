@@ -46,12 +46,6 @@ class ElementVisitor:
     def visitHintedElement(self, hinted_element: hinted_base_element, parentData: Any) -> Any:
         pass
 
-    def visitDecorator(self, decorator: decorator, parentData: Any) -> Any:
-        pass
-
-    def visitDecoratorParam(self, decorator_param: decorator_param, parentData: Any) -> Any:
-        pass
-
     def visitDocumentLine(self, document_line: str, parentData: Any) -> Any:
         pass
 

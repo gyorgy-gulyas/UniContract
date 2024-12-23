@@ -26,13 +26,10 @@ class hinted_base_element(base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.document_lines: List[str] = []
-        self.decorators: List[decorator] = []
 
     def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:
         visitor.visitHintedElement(self, parentData)
         super().visit(visitor, parentData)
-        for decorator in self.decorators:
-            decorator.visit(visitor, parentData)
         for document_line in self.document_lines:
             visitor.visitDocumentLine(document_line, parentData)
         return parentData
@@ -53,37 +50,6 @@ class qualified_name(base_element):
 
     def getText(self):
         return '.'.join(self.names)
-
-
-class decorator(base_element):
-    def __init__(self, fileName, pos):
-        super().__init__(fileName, pos)
-        self.name: str = None
-        self.params: List[decorator_param] = []
-
-    def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:
-        data = visitor.visitDecorator(self, parentData)
-        super().visit(visitor, data)
-        for param in self.params:
-            param.visit(visitor, data)
-        return data
-
-
-class decorator_param(base_element):
-    def __init__(self, fileName, pos):
-        super().__init__(fileName, pos)
-        self.kind = None
-        self.value = None
-
-    def visit(self, visitor: ElementVisitor, parentData: Any) -> Any:
-        data = visitor.visitDecoratorParam(self, parentData)
-        super().visit(visitor, data)
-
-    class Kind(Enum):
-        QualifiedName = 1
-        Integer = 2
-        Number = 3
-        String = 4
 
 class import_(hinted_base_element):
     def __init__(self, fileName, pos):

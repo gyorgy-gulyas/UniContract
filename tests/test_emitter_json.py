@@ -422,6 +422,7 @@ namespace someNamespace {
                         {
                             "$type": "interface_method",
                             "name": "CreateCustomer",
+                            "generic": {},
                             "params": [
                                 {
                                     "$type": "interface_method_param",
@@ -466,6 +467,7 @@ namespace someNamespace {
                         {
                             "$type": "interface_method",
                             "name": "DumpAllCustomer",
+                            "generic": {},
                             "params": [],
                             "return_type": {},
                             "isAsync": false,
@@ -479,6 +481,164 @@ namespace someNamespace {
                         {
                             "$type": "interface_method",
                             "name": "CreateCustomerAsync",
+                            "generic": {},
+                            "params": [
+                                {
+                                    "$type": "interface_method_param",
+                                    "name": "id",
+                                    "type": {
+                                        "$type": "primitive_type",
+                                        "kind": "Kind.Primitive",
+                                        "primtiveKind": "PrimtiveKind.String",
+                                        "location": {
+                                            "fileName": "internal string",
+                                            "line": 6,
+                                            "column": 46
+                                        }
+                                    },
+                                    "document_lines": [],
+                                    "location": {
+                                        "fileName": "internal string",
+                                        "line": 6,
+                                        "column": 42
+                                    }
+                                }
+                            ],
+                            "return_type": {
+                                "$type": "reference_type",
+                                "kind": "Kind.Reference",
+                                "reference_name": "Customer",
+                                "generic": {},
+                                "location": {
+                                    "fileName": "internal string",
+                                    "line": 6,
+                                    "column": 58
+                                }
+                            },
+                            "isAsync": true,
+                            "document_lines": [],
+                            "location": {
+                                "fileName": "internal string",
+                                "line": 6,
+                                "column": 8
+                            }
+                        }
+                    ],
+                    "properties": [],
+                    "document_lines": [],
+                    "location": {
+                        "fileName": "internal string",
+                        "line": 3,
+                        "column": 4
+                    }
+                }
+            ],
+            "document_lines": [],
+            "location": {
+                "fileName": "internal string",
+                "line": 2,
+                "column": 0
+            }
+        }
+    ]
+}"""
+        diff = jsondiff.diff(result, expected, syntax='symmetric')
+        self.assertEqual(0, len(diff))
+
+    def tests_interface_generic_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    interface CustomerService<T> {
+        method CreateCustomer<T>( id: string ) => Customer
+        method DumpAllCustomer()
+        async method CreateCustomerAsync<T extends Number>( id: string ) => Customer
+    }
+}
+"""))
+        engine.Build(session)
+
+        jsonEmmiter = JsonEmitter()
+        result = jsonEmmiter.Emit(session)
+
+        expected = """{
+    "$type": "contract",
+    "imports": [],
+    "namespaces": [
+        {
+            "$type": "namespace",
+            "name": "someNamespace",
+            "enums": [],
+            "interfaces": [
+                {
+                    "$type": "interface",
+                    "name": "CustomerService",
+                    "generic": {},
+                    "enums": [],
+                    "methods": [
+                        {
+                            "$type": "interface_method",
+                            "name": "CreateCustomer",
+                            "generic": {},
+                            "params": [
+                                {
+                                    "$type": "interface_method_param",
+                                    "name": "id",
+                                    "type": {
+                                        "$type": "primitive_type",
+                                        "kind": "Kind.Primitive",
+                                        "primtiveKind": "PrimtiveKind.String",
+                                        "location": {
+                                            "fileName": "internal string",
+                                            "line": 4,
+                                            "column": 35
+                                        }
+                                    },
+                                    "document_lines": [],
+                                    "location": {
+                                        "fileName": "internal string",
+                                        "line": 4,
+                                        "column": 31
+                                    }
+                                }
+                            ],
+                            "return_type": {
+                                "$type": "reference_type",
+                                "kind": "Kind.Reference",
+                                "reference_name": "Customer",
+                                "generic": {},
+                                "location": {
+                                    "fileName": "internal string",
+                                    "line": 4,
+                                    "column": 47
+                                }
+                            },
+                            "isAsync": false,
+                            "document_lines": [],
+                            "location": {
+                                "fileName": "internal string",
+                                "line": 4,
+                                "column": 8
+                            }
+                        },
+                        {
+                            "$type": "interface_method",
+                            "name": "DumpAllCustomer",
+                            "generic": {},
+                            "params": [],
+                            "return_type": {},
+                            "isAsync": false,
+                            "document_lines": [],
+                            "location": {
+                                "fileName": "internal string",
+                                "line": 5,
+                                "column": 8
+                            }
+                        },
+                        {
+                            "$type": "interface_method",
+                            "name": "CreateCustomerAsync",
+                            "generic": {},
                             "params": [
                                 {
                                     "$type": "interface_method_param",

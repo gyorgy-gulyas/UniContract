@@ -189,6 +189,7 @@ class JsonEmitter(ElementVisitor):
             "types": [],
         }
         parentData["generic"] = data
+        return data
 
     def visitGenericType(self, generic_type: generic_type, parentData: Any) -> Any:
         data = {
@@ -197,6 +198,7 @@ class JsonEmitter(ElementVisitor):
             "extends": generic_type.extends.getText() if generic_type.extends != None else ""
         }
         parentData["generic"] = data
+        return data
 
 if __name__ == "__main__":
     pass

@@ -44,11 +44,7 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.document_lines.append(document_line.getText()[1:])
 
         if (ctx.qualifiedName() != None):
-            result.kind = import_.Kind.ContractNamespace
             result.value = self.visit(ctx.qualifiedName()).getText()
-        else:
-            result.kind = import_.Kind.ExternalNamespace
-            result.value = ctx.STRING_LITERAL().getText().strip('"')
 
         return result
 
@@ -239,13 +235,8 @@ class ElementBuilder(UniContractGrammarVisitor):
         result = reference_type(self.fileName, ctx.start)
         result.kind = type.Kind.Reference
         if (ctx.qualifiedName() != None):
-            result.isExternal = False
             result.reference_name = self.visit(ctx.qualifiedName())
             result.reference_name.parent = result
-        elif (ctx.EXTERNAL() != None):
-            result.isExternal = True
-            result.reference_name = qualified_name(self.fileName, ctx.start)
-            result.reference_name.names.append(ctx.STRING_LITERAL().getText().strip('"'))
 
         return result
 

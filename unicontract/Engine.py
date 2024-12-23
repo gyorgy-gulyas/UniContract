@@ -102,8 +102,6 @@ class Engine:
         session.all[source.fileName] = _contract
 
         for _import in _contract.imports:
-            if (_import.kind == import_.Kind.ExternalNamespace):
-                continue
             import_path = os.path.normpath(os.path.join(Path(source.fileName).parent, _import.value+".contract"))
             if (import_path not in session.all):
                 self.__import_contract(import_path, _import, session)

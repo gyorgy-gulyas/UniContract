@@ -86,9 +86,6 @@ class SemanticChecker(ElementVisitor):
         if (len(reference_type.reference_name.names) == 0):
             self.__error(reference_type, f"Empty referenced name.")
 
-        if (reference_type.isExternal == True):
-            return
-
         element, message = self.__get_referenced_element(reference_type.parent, reference_type.reference_name)
         if (element == None):
             self.__error(reference_type, message)

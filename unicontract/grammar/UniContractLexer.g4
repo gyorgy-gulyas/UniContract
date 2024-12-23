@@ -50,11 +50,6 @@ METHOD: 'method';
 READONLY: 'readonly';
 ASYNC: 'async';
 
-// constans
-INTEGER_CONSTANS: [0-9]+;
-NUMBER_CONSTANS: [0-9]+ '.' [0-9]+;
-STRING_LITERAL: '"' .*? '"';
-
 // syntax controllers
 IDENTIFIER: [a-z][a-z_0-9]*;
 WS: [ \t\n\r\f]+ -> skip;

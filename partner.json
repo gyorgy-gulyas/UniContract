@@ -73,7 +73,6 @@
                             "type": {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
-                                "isExternal": false,
                                 "reference_name": "Kind",
                                 "location": {
                                     "fileName": ".\\sample\\partner.contract",

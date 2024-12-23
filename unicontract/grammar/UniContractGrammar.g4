@@ -10,7 +10,6 @@ contract
 
 import_rule
     : DOCUMENT_LINE* 'import' qualifiedName
-    | DOCUMENT_LINE* 'import' STRING_LITERAL
     ;
 
 namespace
@@ -67,7 +66,6 @@ type
 
     reference_type
         : qualifiedName
-        | 'external' '[' STRING_LITERAL ']'
         ;
 
     list_type

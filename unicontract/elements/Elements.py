@@ -54,12 +54,7 @@ class qualified_name(base_element):
 class import_(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
-        self.kind = None
         self.value: str = "" 
-
-    class Kind(Enum):
-        ContractNamespace = 1
-        ExternalNamespace = 2
 
 class contract(IScope):
     def __init__(self):
@@ -229,7 +224,6 @@ class primitive_type(type):
 class reference_type(type):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
-        self.isExternal = False
         self.reference_name: qualified_name = None
 
 

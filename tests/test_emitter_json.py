@@ -255,7 +255,6 @@ namespace SomeNameSpace {
         property country:Country
         readonly property address:string
         property zipCode:integer
-        property private_member:external["java.util.map.HashMap<>"]
     }
 }
 """))
@@ -286,7 +285,6 @@ namespace SomeNameSpace {
                             "type": {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
-                                "isExternal": false,
                                 "reference_name": "AddressType",
                                 "location": {
                                     "fileName": "internal string",
@@ -308,7 +306,6 @@ namespace SomeNameSpace {
                             "type": {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
-                                "isExternal": false,
                                 "reference_name": "Country",
                                 "location": {
                                     "fileName": "internal string",
@@ -363,28 +360,6 @@ namespace SomeNameSpace {
                             "location": {
                                 "fileName": "internal string",
                                 "line": 7,
-                                "column": 8
-                            }
-                        },
-                        {
-                            "$type": "interface_property",
-                            "name": "private_member",
-                            "type": {
-                                "$type": "reference_type",
-                                "kind": "Kind.Reference",
-                                "isExternal": true,
-                                "reference_name": "java.util.map.HashMap<>",
-                                "location": {
-                                    "fileName": "internal string",
-                                    "line": 8,
-                                    "column": 32
-                                }
-                            },
-                            "isReadonly": false,
-                            "document_lines": [],
-                            "location": {
-                                "fileName": "internal string",
-                                "line": 8,
                                 "column": 8
                             }
                         }
@@ -467,7 +442,6 @@ namespace someNamespace {
                             "return_type": {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
-                                "isExternal": false,
                                 "reference_name": "Customer",
                                 "location": {
                                     "fileName": "internal string",
@@ -524,7 +498,6 @@ namespace someNamespace {
                             "return_type": {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
-                                "isExternal": false,
                                 "reference_name": "Customer",
                                 "location": {
                                     "fileName": "internal string",

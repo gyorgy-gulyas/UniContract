@@ -288,6 +288,7 @@ namespace SomeNameSpace {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
                                 "reference_name": "AddressType",
+                                "generic": {},
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 4,
@@ -309,6 +310,7 @@ namespace SomeNameSpace {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
                                 "reference_name": "Country",
+                                "generic": {},
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 5,
@@ -446,6 +448,7 @@ namespace someNamespace {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
                                 "reference_name": "Customer",
+                                "generic": {},
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 4,
@@ -502,6 +505,7 @@ namespace someNamespace {
                                 "$type": "reference_type",
                                 "kind": "Kind.Reference",
                                 "reference_name": "Customer",
+                                "generic": {},
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 6,

@@ -552,7 +552,7 @@ namespace someNamespace {
     interface CustomerService<T> {
         method CreateCustomer<T>( id: string ) => Customer
         method DumpAllCustomer()
-        async method CreateCustomerAsync<T extends Number>( id: string ) => Customer
+        async method CreateCustomerAsync<T extends Something>( id: string ) => Customer
     }
 }
 """))
@@ -573,13 +573,51 @@ namespace someNamespace {
                 {
                     "$type": "interface",
                     "name": "CustomerService",
-                    "generic": {},
+                    "generic": {
+                        "$type": "generic",
+                        "types": [
+                            {
+                                "$type": "generic_type",
+                                "type_name": "T",
+                                "extends": "",
+                                "location": {
+                                    "fileName": "internal string",
+                                    "line": 3,
+                                    "column": 30
+                                }
+                            }
+                        ],
+                        "location": {
+                            "fileName": "internal string",
+                            "line": 3,
+                            "column": 29
+                        }
+                    },
                     "enums": [],
                     "methods": [
                         {
                             "$type": "interface_method",
                             "name": "CreateCustomer",
-                            "generic": {},
+                            "generic": {
+                                "$type": "generic",
+                                "types": [
+                                    {
+                                        "$type": "generic_type",
+                                        "type_name": "T",
+                                        "extends": "",
+                                        "location": {
+                                            "fileName": "internal string",
+                                            "line": 4,
+                                            "column": 30
+                                        }
+                                    }
+                                ],
+                                "location": {
+                                    "fileName": "internal string",
+                                    "line": 4,
+                                    "column": 29
+                                }
+                            },
                             "params": [
                                 {
                                     "$type": "interface_method_param",
@@ -591,14 +629,14 @@ namespace someNamespace {
                                         "location": {
                                             "fileName": "internal string",
                                             "line": 4,
-                                            "column": 35
+                                            "column": 38
                                         }
                                     },
                                     "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 4,
-                                        "column": 31
+                                        "column": 34
                                     }
                                 }
                             ],
@@ -610,7 +648,7 @@ namespace someNamespace {
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 4,
-                                    "column": 47
+                                    "column": 50
                                 }
                             },
                             "isAsync": false,
@@ -638,7 +676,26 @@ namespace someNamespace {
                         {
                             "$type": "interface_method",
                             "name": "CreateCustomerAsync",
-                            "generic": {},
+                            "generic": {
+                                "$type": "generic",
+                                "types": [
+                                    {
+                                        "$type": "generic_type",
+                                        "type_name": "T",
+                                        "extends": "Something",
+                                        "location": {
+                                            "fileName": "internal string",
+                                            "line": 6,
+                                            "column": 41
+                                        }
+                                    }
+                                ],
+                                "location": {
+                                    "fileName": "internal string",
+                                    "line": 6,
+                                    "column": 40
+                                }
+                            },
                             "params": [
                                 {
                                     "$type": "interface_method_param",
@@ -650,14 +707,14 @@ namespace someNamespace {
                                         "location": {
                                             "fileName": "internal string",
                                             "line": 6,
-                                            "column": 46
+                                            "column": 67
                                         }
                                     },
                                     "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 6,
-                                        "column": 42
+                                        "column": 63
                                     }
                                 }
                             ],
@@ -669,7 +726,7 @@ namespace someNamespace {
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 6,
-                                    "column": 58
+                                    "column": 79
                                 }
                             },
                             "isAsync": true,

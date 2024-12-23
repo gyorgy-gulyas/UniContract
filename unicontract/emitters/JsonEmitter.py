@@ -197,7 +197,7 @@ class JsonEmitter(ElementVisitor):
             "type_name": generic_type.type_name,
             "extends": generic_type.extends.getText() if generic_type.extends != None else ""
         }
-        parentData["generic"] = data
+        parentData["types"].append( data )
         return data
 
 if __name__ == "__main__":

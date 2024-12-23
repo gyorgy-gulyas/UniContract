@@ -373,31 +373,30 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#generic.
-    def visitGeneric(self, ctx:UniContractGrammar.GenericContext):
+    def visitGeneric(self, ctx: UniContractGrammar.GenericContext):
         result = generic(self.fileName, ctx.start)
-        
+
         counter = 0
         while True:
             generic_type = ctx.generic_type((counter))
             if (generic_type == None):
                 break
             counter = counter + 1
-            child:generic_type = self.visit(generic_type)
+            child: generic_type = self.visit(generic_type)
             child.parent = result
             result.types.append(child)
 
         return result
 
-
     # Visit a parse tree produced by UniContractGrammar#generic_type.
-    def visitGeneric_type(self, ctx:UniContractGrammar.Generic_typeContext):
+    def visitGeneric_type(self, ctx: UniContractGrammar.Generic_typeContext):
         result = generic_type(self.fileName, ctx.start)
 
         if (ctx.IDENTIFIER() != None):
             result.type_name = ctx.IDENTIFIER().getText()
-        
-        if( ctx.EXTENDS() != None):
-            extends:qualified_name = self.visit( ctx.qualifiedName())
+
+        if (ctx.EXTENDS() != None):
+            extends: qualified_name = self.visit(ctx.qualifiedName())
             extends.parent = result
             result.extends = extends
 

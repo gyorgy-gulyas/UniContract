@@ -268,7 +268,7 @@ class generic_type(base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.type_name: str = ""
-        self.extends: qualified_name = None
+        self.constraint: qualified_name = None
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitGenericType(self, parentData)

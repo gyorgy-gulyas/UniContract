@@ -381,11 +381,11 @@ namespace SomeNamespace
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace SomeNamespace{
-    interface SomeInerface<T extends SomeInerface2> {
+    interface SomeInerface<T constraint SomeInerface2> {
         property name: T
 
         method Func1() => T
-        method Func2<K extends SomeInerface2>( k:K )
+        method Func2<K constraint SomeInerface2>( k:K )
     }
                                                 
     interface SomeInerface2{

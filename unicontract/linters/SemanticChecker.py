@@ -91,12 +91,12 @@ class SemanticChecker(ElementVisitor):
         if _interface.generic != None:
             for generic_type in _interface.generic.types:
                 # If the generic type specifies an `extends` constraint, resolve it.
-                if generic_type.extends != None:
-                    extends, message = self.__get_referenced_element(_interface.parent, generic_type.extends)
+                if generic_type.constraint != None:
+                    extends, message = self.__get_referenced_element(_interface.parent, generic_type.constraint)
 
                     if extends == None:
                         # Raise an error if the `extends` reference cannot be resolved.
-                        self.__error(generic_type, f"The generic type extend reference '{generic_type.extends.getText()}' not found. {message}")
+                        self.__error(generic_type, f"The generic type extend reference '{generic_type.constraint.getText()}' not found. {message}")
 
     def visitInterfaceProperty(self, interface_property: interface_property, parentData: Any) -> Any:
         """
@@ -138,11 +138,11 @@ class SemanticChecker(ElementVisitor):
             # Iterate over all generic types in the method.
             for generic_type in interface_method.generic.types:
                 # If a generic type specifies an 'extends' constraint, resolve it.
-                if generic_type.extends != None:
-                    extends, message = self.__get_referenced_element(interface_method.parent, generic_type.extends)
+                if generic_type.constraint != None:
+                    extends, message = self.__get_referenced_element(interface_method.parent, generic_type.constraint)
                     # Raise an error if the 'extends' reference cannot be resolved.
                     if extends == None:
-                        self.__error(generic_type, f"The generic type extend reference '{generic_type.extends.getText()}' not found. {message}")
+                        self.__error(generic_type, f"The generic type extend reference '{generic_type.constraint.getText()}' not found. {message}")
 
     def visitInterfaceMethodParam(self, interface_method_param: interface_method_param, parentData: Any) -> Any:
         """

@@ -390,9 +390,9 @@ class ElementBuilder(UniContractGrammarVisitor):
         if (ctx.IDENTIFIER() != None):
             result.type_name = ctx.IDENTIFIER().getText()
 
-        if (ctx.EXTENDS() != None):
-            extends: qualified_name = self.visit(ctx.qualifiedName())
-            extends.parent = result
-            result.extends = extends
+        if (ctx.CONSTRAINT() != None):
+            constraint: qualified_name = self.visit(ctx.qualifiedName())
+            constraint.parent = result
+            result.constraint = constraint
 
         return result

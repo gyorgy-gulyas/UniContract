@@ -135,7 +135,7 @@ namespace SomeNamespace {
 namespace Namespace1 {
     enum Enum1{
     }
-    interface Interface1<T extends Namespace2.Interface2>{
+    interface Interface1<T constraint Namespace2.Interface2>{
         enum InnerEnum1{
         }
 
@@ -147,7 +147,7 @@ namespace Namespace1 {
         property prop6: Namespace2.Interface2.InnerEnum1
         property prop7: T
                                                 
-        method Something<K extends Namespace2.Interface2>()
+        method Something<K constraint Namespace2.Interface2>()
     }
 }
 namespace Namespace2 {

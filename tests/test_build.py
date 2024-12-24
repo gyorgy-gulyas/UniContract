@@ -218,7 +218,7 @@ namespace someNamespace {
     }
     interface Generic2<T1,T2> {
     }
-    interface Generic3<T extends Normal> {
+    interface Generic3<T constraint Normal> {
     }
 }
 """))
@@ -237,23 +237,23 @@ namespace someNamespace {
         self.assertIsNotNone(interface.generic)
         self.assertEqual(len(interface.generic.types), 1)
         self.assertEqual(interface.generic.types[0].type_name, "T")
-        self.assertEqual(interface.generic.types[0].extends, None)
+        self.assertEqual(interface.generic.types[0].constraint, None)
 
         interface: interface = namespace.interfaces[2]
         self.assertEqual(interface.name, "Generic2")
         self.assertIsNotNone(interface.generic)
         self.assertEqual(len(interface.generic.types), 2)
         self.assertEqual(interface.generic.types[0].type_name, "T1")
-        self.assertEqual(interface.generic.types[0].extends, None)
+        self.assertEqual(interface.generic.types[0].constraint, None)
         self.assertEqual(interface.generic.types[1].type_name, "T2")
-        self.assertEqual(interface.generic.types[1].extends, None)
+        self.assertEqual(interface.generic.types[1].constraint, None)
 
         interface: interface = namespace.interfaces[3]
         self.assertEqual(interface.name, "Generic3")
         self.assertIsNotNone(interface.generic)
         self.assertEqual(len(interface.generic.types), 1)
         self.assertEqual(interface.generic.types[0].type_name, "T")
-        self.assertEqual(interface.generic.types[0].extends.getText(), "Normal")
+        self.assertEqual(interface.generic.types[0].constraint.getText(), "Normal")
 
     def test_interface_generic_method_ok(self):
         engine = Engine()
@@ -263,7 +263,7 @@ namespace someNamespace {
         method Func1()
         method Func2<T>()
         method Func3<T1,T2>()
-        method Func4<T extends Normal>()
+        method Func4<T constraint Normal>()
     }
 }
 """))
@@ -283,23 +283,23 @@ namespace someNamespace {
         self.assertIsNotNone(method.generic)
         self.assertEqual(len(method.generic.types), 1)
         self.assertEqual(method.generic.types[0].type_name, "T")
-        self.assertEqual(method.generic.types[0].extends, None)
+        self.assertEqual(method.generic.types[0].constraint, None)
 
         method: interface = interface.methods[2]
         self.assertEqual(method.name, "Func3")
         self.assertIsNotNone(method.generic)
         self.assertEqual(len(method.generic.types), 2)
         self.assertEqual(method.generic.types[0].type_name, "T1")
-        self.assertEqual(method.generic.types[0].extends, None)
+        self.assertEqual(method.generic.types[0].constraint, None)
         self.assertEqual(method.generic.types[1].type_name, "T2")
-        self.assertEqual(method.generic.types[1].extends, None)
+        self.assertEqual(method.generic.types[1].constraint, None)
 
         method: interface = interface.methods[3]
         self.assertEqual(method.name, "Func4")
         self.assertIsNotNone(method.generic)
         self.assertEqual(len(method.generic.types), 1)
         self.assertEqual(method.generic.types[0].type_name, "T")
-        self.assertEqual(method.generic.types[0].extends.getText(), "Normal")
+        self.assertEqual(method.generic.types[0].constraint.getText(), "Normal")
 
 
 if __name__ == "__main__":

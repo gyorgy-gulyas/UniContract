@@ -50,7 +50,7 @@ PROPERTY: 'property';
 METHOD: 'method';
 READONLY: 'readonly';
 ASYNC: 'async';
-EXTENDS: 'extends';
+CONSTRAINT: 'constraint';
 
 // syntax controllers
 IDENTIFIER: [a-z][a-z_0-9]*;

@@ -552,7 +552,7 @@ namespace someNamespace {
     interface CustomerService<T> {
         method CreateCustomer<T>( id: string ) => Customer
         method DumpAllCustomer()
-        async method CreateCustomerAsync<T extends Something>( id: string ) => Customer
+        async method CreateCustomerAsync<T constraint Something>( id: string ) => Customer
     }
 }
 """))
@@ -579,7 +579,7 @@ namespace someNamespace {
                             {
                                 "$type": "generic_type",
                                 "type_name": "T",
-                                "extends": "",
+                                "constraint": "",
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 3,
@@ -604,7 +604,7 @@ namespace someNamespace {
                                     {
                                         "$type": "generic_type",
                                         "type_name": "T",
-                                        "extends": "",
+                                        "constraint": "",
                                         "location": {
                                             "fileName": "internal string",
                                             "line": 4,
@@ -682,7 +682,7 @@ namespace someNamespace {
                                     {
                                         "$type": "generic_type",
                                         "type_name": "T",
-                                        "extends": "Something",
+                                        "constraint": "Something",
                                         "location": {
                                             "fileName": "internal string",
                                             "line": 6,

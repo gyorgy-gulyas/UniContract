@@ -97,6 +97,6 @@ generic
     ;
 
     generic_type
-        : IDENTIFIER ('extends' qualifiedName)?
+        : IDENTIFIER ('constraint' qualifiedName)?
         ;
 

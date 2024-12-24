@@ -115,7 +115,7 @@ class UniContractGrammar ( Parser ):
                      "'number'", "'float'", "'date'", "'time'", "'dateTime'", 
                      "'string'", "'boolean'", "'bytes'", "'stream'", "'list'", 
                      "'map'", "'inherits'", "'external'", "'property'", 
-                     "'method'", "'readonly'", "'async'", "'extends'" ]
+                     "'method'", "'readonly'", "'async'", "'constraint'" ]
 
     symbolicNames = [ "<INVALID>", "DOT", "COMMA", "SEMI", "LPAREN", "RPAREN", 
                       "LCURLY", "RCURLY", "LBARCKET", "RBRACKET", "ARROW", 
@@ -123,7 +123,7 @@ class UniContractGrammar ( Parser ):
                       "INTEGER", "NUMBER", "FLOAT", "DATE", "TIME", "DATETIME", 
                       "STRING", "BOOLEAN", "BYTES", "STREAM", "LIST", "MAP", 
                       "INHERITS", "EXTERNAL", "PROPERTY", "METHOD", "READONLY", 
-                      "ASYNC", "EXTENDS", "IDENTIFIER", "WS", "DOCUMENT_LINE", 
+                      "ASYNC", "CONSTRAINT", "IDENTIFIER", "WS", "DOCUMENT_LINE", 
                       "LINE_COMMENT", "BLOCK_COMMENT" ]
 
     RULE_contract = 0
@@ -189,7 +189,7 @@ class UniContractGrammar ( Parser ):
     METHOD=32
     READONLY=33
     ASYNC=34
-    EXTENDS=35
+    CONSTRAINT=35
     IDENTIFIER=36
     WS=37
     DOCUMENT_LINE=38
@@ -1791,8 +1791,8 @@ class UniContractGrammar ( Parser ):
         def IDENTIFIER(self):
             return self.getToken(UniContractGrammar.IDENTIFIER, 0)
 
-        def EXTENDS(self):
-            return self.getToken(UniContractGrammar.EXTENDS, 0)
+        def CONSTRAINT(self):
+            return self.getToken(UniContractGrammar.CONSTRAINT, 0)
 
         def qualifiedName(self):
             return self.getTypedRuleContext(UniContractGrammar.QualifiedNameContext,0)
@@ -1832,7 +1832,7 @@ class UniContractGrammar ( Parser ):
             _la = self._input.LA(1)
             if _la==35:
                 self.state = 246
-                self.match(UniContractGrammar.EXTENDS)
+                self.match(UniContractGrammar.CONSTRAINT)
                 self.state = 247
                 self.qualifiedName()
 

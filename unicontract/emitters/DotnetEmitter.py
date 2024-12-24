@@ -246,10 +246,10 @@ class DotnetEmitter:
         buffer = io.StringIO()
 
         for generic_type in generic.types:
-            if (generic_type.extends == None):
+            if (generic_type.constraint == None):
                 continue
 
-            buffer.write(f"\n{self.tab(indent+1)}where {generic_type.type_name}: {generic_type.extends.getText()}")
+            buffer.write(f"\n{self.tab(indent+1)}where {generic_type.type_name}: {generic_type.constraint.getText()}")
 
         return buffer.getvalue()
 

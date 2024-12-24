@@ -377,5 +377,50 @@ namespace SomeNamespace
         compiled, errors, assembly = dotnet_code_helper.compile_debug(result, dotnet_code_helper.assembly_name())
         self.assertTrue(compiled)
 
+    def test_interface_generic_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace SomeNamespace{
+    interface SomeInerface<T extends SomeInerface2> {
+        property name: T
+
+        method Func1() => T
+        method Func2<K extends SomeInerface2>( k:K )
+    }
+                                                
+    interface SomeInerface2{
+    }                                    
+}"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        emitter = DotnetEmitter()
+        result = emitter.Emit(session)
+        self.assertEqual(len(result), 2)
+        expected = """
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+namespace SomeNamespace
+{
+    interface SomeInerface<T>
+        where T: SomeInerface2
+    {
+
+        public T name { get; set; }
+
+        T Func1();
+        void Func2<K>(K k) 
+            where K: SomeInerface2;
+    }
+}
+"""
+        self.assertEqual(result[0].fileName, "SomeInerface.cs")
+        equal, index, diff_part_1, diff_part_2 = dotnet_code_helper.compare_and_extract_diff(expected, result[0].content)
+        self.assertTrue(equal)
+        compiled, errors, assembly = dotnet_code_helper.compile_debug(result, dotnet_code_helper.assembly_name())
+        self.assertTrue(compiled)
+
 if __name__ == "__main__":
     unittest.main()

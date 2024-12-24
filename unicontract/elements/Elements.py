@@ -239,8 +239,6 @@ class reference_type(type):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.reference_name: qualified_name = None
-        self.generic: generic = None
-
 
 class list_type(type):
     def __init__(self, fileName, pos):

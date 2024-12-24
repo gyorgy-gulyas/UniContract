@@ -3,7 +3,7 @@ import io
 from typing import Dict
 from unicontract.elements.Elements import *
 from unicontract.Engine import *
-    
+
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
     """
@@ -147,8 +147,11 @@ class DotnetEmitter:
         buffer = io.StringIO()
         buffer.write("\n")
         buffer.write(self.documentLines(interface, indent))
-        buffer.write(f"{self.tab(indent)}interface {interface.name}\n")
-        buffer.write(f"{self.tab(indent)}{{\n")
+        buffer.write(f"{self.tab(indent)}interface {interface.name}")
+        if (interface.generic):
+            buffer.write(self.genericText(interface.generic, indent))
+            buffer.write(self.genericConstraintText(interface.generic, indent))
+        buffer.write(f"\n{self.tab(indent)}{{\n")
 
         # Process nested enums in the interface
         for enum in interface.enums:
@@ -198,7 +201,12 @@ class DotnetEmitter:
                 buffer.write(f"Task")
             else:
                 buffer.write(f"void")
-        buffer.write(f" {method.name}(")
+        buffer.write(f" {method.name}")
+
+        if (method.generic):
+            buffer.write(self.genericText(method.generic, indent))
+
+        buffer.write(f"(")
 
         # Check if parameters should be broken into multiple lines
         break_lines = any(param.document_lines for param in method.params) or len(method.params) >= 5
@@ -207,15 +215,42 @@ class DotnetEmitter:
         firstParam: bool = True
         for param in method.params:
             if not firstParam:
-                buffer.write(f", ")
+                buffer.write(", ")
             if break_lines:
-                buffer.write(f"\n")
+                buffer.write("\n")
                 buffer.write(self.documentLines(param, indent+1))
                 buffer.write(f"{self.tab(indent+1)}")
             buffer.write(f"{self.typeText(param.type)} {param.name}")
             firstParam = False
 
-        buffer.write(f");\n")
+        buffer.write(f")" )
+                     
+        if (method.generic):
+            buffer.write(self.genericConstraintText(method.generic, indent))
+
+        buffer.write(f";\n")
+        return buffer.getvalue()
+
+    def genericText(self, generic: generic, indent: int = 1):
+        buffer = io.StringIO()
+        buffer.write("<")
+        firstParam: bool = True
+        for generic_type in generic.types:
+            if not firstParam:
+                buffer.write(", ")
+            buffer.write(generic_type.type_name)
+        buffer.write(">")
+        return buffer.getvalue()
+
+    def genericConstraintText(self, generic: generic, indent: int = 1):
+        buffer = io.StringIO()
+
+        for generic_type in generic.types:
+            if (generic_type.extends == None):
+                continue
+
+            buffer.write(f"\n{self.tab(indent+1)}where {generic_type.type_name}: {generic_type.extends.getText()}")
+
         return buffer.getvalue()
 
     def typeText(self, type: type):

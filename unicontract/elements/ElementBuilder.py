@@ -264,11 +264,6 @@ class ElementBuilder(UniContractGrammarVisitor):
             reference_name.parent = result
             result.reference_name = reference_name
 
-        if (ctx.generic() != None):
-            value: generic = self.visit(ctx.generic())
-            value.parent = result
-            result.generic = value
-
         return result
 
     # Visit a parse tree produced by UniContractGrammar#list_type.

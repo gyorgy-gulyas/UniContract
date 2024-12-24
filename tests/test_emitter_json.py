@@ -707,14 +707,14 @@ namespace someNamespace {
                                         "location": {
                                             "fileName": "internal string",
                                             "line": 6,
-                                            "column": 67
+                                            "column": 70
                                         }
                                     },
                                     "document_lines": [],
                                     "location": {
                                         "fileName": "internal string",
                                         "line": 6,
-                                        "column": 63
+                                        "column": 66
                                     }
                                 }
                             ],
@@ -726,7 +726,7 @@ namespace someNamespace {
                                 "location": {
                                     "fileName": "internal string",
                                     "line": 6,
-                                    "column": 79
+                                    "column": 82
                                 }
                             },
                             "isAsync": true,

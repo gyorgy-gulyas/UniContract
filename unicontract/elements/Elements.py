@@ -58,7 +58,8 @@ class qualified_name(base_element):
 class import_(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
-        self.value: str = ""
+        self.name: str = ""
+        self.contract: contract = ""
 
 
 class contract(IScope):
@@ -203,6 +204,8 @@ class type(base_element):
                 data = visitor.visitPrimitiveType(self, parentData, memberName)
             case type.Kind.Reference:
                 data = visitor.visitReferenceType(self, parentData, memberName)
+                if (self.generic):
+                    visitor.visitGeneric(self.generic, parentData)
             case type.Kind.List:
                 data = visitor.visitListType(self, parentData, memberName)
                 if (self.item_type != None):
@@ -239,6 +242,8 @@ class reference_type(type):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.reference_name: qualified_name = None
+        self.generic: generic = None
+
 
 class list_type(type):
     def __init__(self, fileName, pos):
@@ -263,6 +268,7 @@ class generic(base_element):
         super().visit(visitor, data)
         for type in self.types:
             type.visit(visitor, data)
+
 
 class generic_type(base_element):
     def __init__(self, fileName, pos):

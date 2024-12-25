@@ -1,12 +1,13 @@
 import IDataStore
+import IEntity
 
 namespace DataStoring {
 
-    interface ICollection<T> {
+    interface ICollection<T constraint IEntity> {
         readonly property DataStore:IDataStore
 
-        async method Insert( entity: string ) => boolean
-        async method Update( entity: string ) => boolean
-        async method Delete( entity: string ) => boolean
+        async method Insert( entity: T ) => boolean
+        async method Update( entity: T ) => boolean
+        async method Delete( entity: T ) => boolean
     }
 }

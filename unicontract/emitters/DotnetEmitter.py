@@ -79,17 +79,29 @@ class DotnetEmitter:
 
         return "\n".join(using_statements) + "\n"
 
-    def importsText(self, session: Session) -> str:
+    def importsText(self, current_namespace: namespace, session: Session) -> str:
         """
         Returns the refrenced by import 'using' statements to be included in the .cs files.
         """
+        # Create an in-memory buffer to collect the output
         buffer = io.StringIO()
 
+        # Iterate over the imports in the main session
         for _import in session.main.imports:
-            buffer.write(self.documentLines(_import, indent=0))
-            buffer.write(f"using {_import.value};")
+            # Skip imports with no associated contract
+            if _import.contract is None:
+                continue
 
+            # Check the namespaces in the imported contract
+            for imported_namespace in _import.contract.namespaces:
+                # Add using statement if the namespace differs from the current one
+                if imported_namespace.name.getText() != current_namespace.name.getText():
+                    buffer.write(self.documentLines(_import, indent=0))
+                    buffer.write(f"using {_import.name};\n")
+
+        # Return the collected output as a string
         return buffer.getvalue()
+
 
     def beginFile(self, namespace: namespace, session: Session) -> str:
         """
@@ -99,7 +111,7 @@ class DotnetEmitter:
         buffer.write(self.fileHeader())
         buffer.write("\n")
         buffer.write(self.defaultUsings())
-        buffer.write(self.importsText(session))
+        buffer.write(self.importsText(namespace, session))
         buffer.write("\n")
         buffer.write(f"namespace {namespace.name.getText()}\n")
         buffer.write("{\n")
@@ -119,7 +131,9 @@ class DotnetEmitter:
         Generates documentation lines for the provided element.
         """
         buffer = io.StringIO()
+        # Loop through each document line of the hinted element
         for document_line in hinted_element.document_lines:
+            # Write the documentation line with the specified indentation
             buffer.write(f"{self.tab(indent)}///{document_line}")
             buffer.write("\n")
 
@@ -131,42 +145,56 @@ class DotnetEmitter:
         """
         buffer = io.StringIO()
         buffer.write("\n")
+        # Add documentation lines for the enum
         buffer.write(self.documentLines(enum, indent))
+        # Write the enum declaration with indentation
         buffer.write(f"{self.tab(indent)}enum {enum.name}\n")
         buffer.write(f"{self.tab(indent)}{{\n")
+        # Loop through each enum element and generate code for each
         for enum_element in enum.enum_elements:
             buffer.write(self.documentLines(enum_element, indent))
+            # Write each enum element value
             buffer.write(f"{self.tab(indent+1)}{enum_element.value},\n")
         buffer.write(f"{self.tab(indent)}}}\n")
         return buffer.getvalue()
+
 
     def interfaceText(self, interface: interface, indent: int = 1):
         """
         Generates the .NET code for an interface, including enums, properties, and methods.
         """
         buffer = io.StringIO()
-        buffer.write("\n")
         buffer.write(self.documentLines(interface, indent))
         buffer.write(f"{self.tab(indent)}interface {interface.name}")
+
+        # Process generic type declaration and constraints
         if (interface.generic):
-            buffer.write(self.genericText(interface.generic, indent))
-            buffer.write(self.genericConstraintText(interface.generic, indent))
+            buffer.write(self.genericText(interface.generic))
+            buffer.write(self.genericConstraintText(interface.generic, indent, separator=f"\n{self.tab(indent+1)}"))
+
+        # begin interface body
         buffer.write(f"\n{self.tab(indent)}{{\n")
 
         # Process nested enums in the interface
         for enum in interface.enums:
             buffer.write(f"{self.enumText(enum, indent+1)}")
-        buffer.write("\n")
+
+        # has an enum and will be a property, then the separation new line inserted
+        if (len(interface.enums) > 0 and len(interface.properties) > 0):
+            buffer.write("\n")
 
         # Process properties in the interface
         for property in interface.properties:
             buffer.write(f"{self.propertyText(property, indent+1)}")
-        buffer.write("\n")
+
+        # has an enum or property and will be a method, then the separation new line inserted
+        if ((len(interface.enums) > 0 or len(interface.properties) > 0) and len(interface.methods) > 0):
+            buffer.write("\n")
 
         # Process methods in the interface
         for method in interface.methods:
             buffer.write(f"{self.methodText(method, indent+1)}")
-        buffer.write(f"{self.tab(indent)}}}\n")
+        buffer.write(f"{self.tab(indent)}}}")
         return buffer.getvalue()
 
     def propertyText(self, property: interface_property, indent: int):
@@ -203,10 +231,11 @@ class DotnetEmitter:
                 buffer.write(f"void")
         buffer.write(f" {method.name}")
 
+        # Process generic type declaration
         if (method.generic):
-            buffer.write(self.genericText(method.generic, indent))
+            buffer.write(self.genericText(method.generic))
 
-        buffer.write(f"(")
+        buffer.write(f"( ")
 
         # Check if parameters should be broken into multiple lines
         break_lines = any(param.document_lines for param in method.params) or len(method.params) >= 5
@@ -223,15 +252,16 @@ class DotnetEmitter:
             buffer.write(f"{self.typeText(param.type)} {param.name}")
             firstParam = False
 
-        buffer.write(f")" )
-                     
+        buffer.write(f" )")
+
+        # Process generic type constraints
         if (method.generic):
-            buffer.write(self.genericConstraintText(method.generic, indent))
+            buffer.write(self.genericConstraintText(method.generic, indent, separator=" "))
 
         buffer.write(f";\n")
         return buffer.getvalue()
 
-    def genericText(self, generic: generic, indent: int = 1):
+    def genericText(self, generic: generic):
         buffer = io.StringIO()
         buffer.write("<")
         firstParam: bool = True
@@ -242,14 +272,14 @@ class DotnetEmitter:
         buffer.write(">")
         return buffer.getvalue()
 
-    def genericConstraintText(self, generic: generic, indent: int = 1):
+    def genericConstraintText(self, generic: generic, indent: int = 1, separator = "\n"):
         buffer = io.StringIO()
 
         for generic_type in generic.types:
             if (generic_type.constraint == None):
                 continue
 
-            buffer.write(f"\n{self.tab(indent+1)}where {generic_type.type_name}: {generic_type.constraint.getText()}")
+            buffer.write(f"{separator}where {generic_type.type_name}: {generic_type.constraint.getText()}")
 
         return buffer.getvalue()
 
@@ -293,11 +323,15 @@ class DotnetEmitter:
             case primitive_type.PrimtiveKind.Stream:
                 return "Stream"
 
-    def typeTextReference(self, type: reference_type):
+    def typeTextReference(self, reference_type: reference_type):
         """
         Converts a reference type to its .NET representation.
         """
-        return type.reference_name.getText()
+        buffer = io.StringIO()
+        buffer.write(reference_type.reference_name.getText())
+        if(reference_type.generic != None):
+            buffer.write(self.genericText(reference_type.generic))
+        return buffer.getvalue()
 
     def typeTextList(self, type: list_type):
         """

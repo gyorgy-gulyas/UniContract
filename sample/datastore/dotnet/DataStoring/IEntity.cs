@@ -12,13 +12,8 @@ using System.Collections.Generic;
 
 namespace DataStoring
 {
-	interface ICollection<T>
-		where T: IEntity
+	interface IEntity
 	{
-		public IDataStore DataStore { get; }
-
-		Task<bool> Insert( T entity );
-		Task<bool> Update( T entity );
-		Task<bool> Delete( T entity );
+		public string id { get; }
 	}
 }

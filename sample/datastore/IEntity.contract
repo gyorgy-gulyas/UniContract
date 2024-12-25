@@ -1,0 +1,7 @@
+
+namespace DataStoring {
+
+    interface IEntity {
+        readonly property id:string
+    }
+}

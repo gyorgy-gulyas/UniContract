@@ -411,8 +411,7 @@ namespace SomeNamespace
         public T name { get; set; }
 
         T Func1();
-        void Func2<K>(K k) 
-            where K: SomeInerface2;
+        void Func2<K>(K k) where K: SomeInerface2;
     }
 }
 """

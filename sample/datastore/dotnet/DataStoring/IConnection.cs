@@ -9,19 +9,16 @@
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using IConnection;using ICollection;
+
 namespace DataStoring
 {
-
 	interface IConnection
 	{
-
 		public string ProviderName { get; }
 
-		Task<bool> IsDataStoreExists(string storeName);
-		Task<IDataStore> GetDataStoreByName(string storeName);
-		Task<IDataStore> CreateDataStore(string storeName);
-		Task<IDataStore> DropDataStore(IDataStore dataStore);
+		Task<bool> IsDataStoreExists( string storeName );
+		Task<IDataStore> GetDataStoreByName( string storeName );
+		Task<IDataStore> CreateDataStore( string storeName );
+		Task<IDataStore> DropDataStore( IDataStore dataStore );
 	}
-
 }

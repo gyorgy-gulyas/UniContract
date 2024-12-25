@@ -65,7 +65,7 @@ type
         ;
 
     reference_type
-        : qualifiedName
+        : qualifiedName generic?
         ;
 
     list_type

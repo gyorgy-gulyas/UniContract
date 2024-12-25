@@ -45,7 +45,7 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.document_lines.append(document_line.getText()[1:])
 
         if (ctx.qualifiedName() != None):
-            result.value = self.visit(ctx.qualifiedName()).getText()
+            result.name = self.visit(ctx.qualifiedName()).getText()
 
         return result
 
@@ -263,6 +263,11 @@ class ElementBuilder(UniContractGrammarVisitor):
             reference_name: qualified_name = self.visit(ctx.qualifiedName())
             reference_name.parent = result
             result.reference_name = reference_name
+
+        if (ctx.generic() != None):
+            value: generic = self.visit(ctx.generic())
+            value.parent = result
+            result.generic = value
 
         return result
 

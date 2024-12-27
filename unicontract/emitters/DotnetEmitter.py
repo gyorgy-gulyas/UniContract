@@ -148,11 +148,11 @@ class DotnetEmitter:
         # Add documentation lines for the enum
         buffer.write(self.documentLines(enum, indent))
         # Write the enum declaration with indentation
-        buffer.write(f"{self.tab(indent)}enum {enum.name}\n")
+        buffer.write(f"{self.tab(indent)}public enum {enum.name}\n")
         buffer.write(f"{self.tab(indent)}{{\n")
         # Loop through each enum element and generate code for each
         for enum_element in enum.enum_elements:
-            buffer.write(self.documentLines(enum_element, indent))
+            buffer.write(self.documentLines(enum_element, indent+1))
             # Write each enum element value
             buffer.write(f"{self.tab(indent+1)}{enum_element.value},\n")
         buffer.write(f"{self.tab(indent)}}}\n")
@@ -165,11 +165,24 @@ class DotnetEmitter:
         """
         buffer = io.StringIO()
         buffer.write(self.documentLines(interface, indent))
-        buffer.write(f"{self.tab(indent)}interface {interface.name}")
+        buffer.write(f"{self.tab(indent)}public interface {interface.name}")
 
-        # Process generic type declaration and constraints
+        # Process generic type declaration
         if (interface.generic):
             buffer.write(self.genericText(interface.generic))
+
+        # interface inhertis if any
+        firstInherit:bool = True
+        for inherit in interface.inherits:
+            if(firstInherit):
+                buffer.write(" : ")
+                firstInherit = False
+            else:
+                buffer.write(", ")
+            buffer.write(f"{inherit.getText()}")
+
+        # Process generic type constraints
+        if (interface.generic):
             buffer.write(self.genericConstraintText(interface.generic, indent, separator=f"\n{self.tab(indent+1)}"))
 
         # begin interface body
@@ -215,7 +228,7 @@ class DotnetEmitter:
         """
         buffer = io.StringIO()
         buffer.write(self.documentLines(method, indent))
-        buffer.write(f"{self.tab(indent)}")
+        buffer.write(f"{self.tab(indent)}public ")
 
         # Handle async and non-async methods with return types
         if method.return_type is not None:
@@ -337,13 +350,13 @@ class DotnetEmitter:
         """
         Converts a list type to its .NET representation.
         """
-        return f"System.Generic.List<{self.typeText(type.item_type)}>"
+        return f"IList<{self.typeText(type.item_type)}>"
 
     def typeTextMap(self, type: map_type):
         """
         Converts a map type to its .NET representation.
         """
-        return f"System.Generic.Dictionary<{self.typeText(type.key_type)},{self.typeText(type.value_type)}>"
+        return f"IDictionary<{self.typeText(type.key_type)},{self.typeText(type.value_type)}>"
 
     def tab(self, indent=1):
         return '\t'*indent

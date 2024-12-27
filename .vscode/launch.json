@@ -11,7 +11,7 @@
             "justMyCode": false,
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-i", "sample/datastore/IDataStore.contract", "--verbose", "--output-dir", "sample/datastore/dotnet/", "--emitter", "dotnet" ],
+            "args": ["-i", "d:/Projects.OWN/PolyPersist/contracts/PolyPersist.contract", "--verbose", "--output-dir", "d:/Projects.OWN/PolyPersist/interfaces/dotnet", "--emitter", "dotnet" ],
             "envFile": "${workspaceRoot}/.env",
             "cwd": "${workspaceFolder}"
         }

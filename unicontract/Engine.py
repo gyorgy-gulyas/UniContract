@@ -34,6 +34,7 @@ class Source:
         source = Source()
         # Normalize and get the absolute path of the file
         source.fileName = os.path.normpath(os.path.abspath(fileName))
+
         # Open and read the file content
         with open(fileName, 'r') as file:
             source.content = file.read()
@@ -174,6 +175,7 @@ class Engine:
                 _import.line,
                 _import.column
             )
+            return None
         # Create source from file and build its syntax and element trees
         import_source = Source.CreateFromFile(import_path)
         import_syntaxTree = self.__create_syntax_tree(import_source, session)

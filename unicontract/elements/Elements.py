@@ -275,6 +275,7 @@ class generic_type(base_element):
         super().__init__(fileName, pos)
         self.type_name: str = ""
         self.constraint: qualified_name = None
+        self.instantiable: bool = False
 
     def visit(self, visitor: ElementVisitor, parentData: Any):
         data = visitor.visitGenericType(self, parentData)

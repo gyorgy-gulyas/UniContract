@@ -400,4 +400,7 @@ class ElementBuilder(UniContractGrammarVisitor):
             constraint.parent = result
             result.constraint = constraint
 
+        if (ctx.INSTANTIABLE() != None):
+            result.instantiable = True
+
         return result

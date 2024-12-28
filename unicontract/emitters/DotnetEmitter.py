@@ -289,10 +289,17 @@ class DotnetEmitter:
         buffer = io.StringIO()
 
         for generic_type in generic.types:
-            if (generic_type.constraint == None):
-                continue
+            whereWritten:bool = False
+            
+            if (generic_type.constraint != None):
+                buffer.write(f"{separator}where {generic_type.type_name}: {generic_type.constraint.getText()}")
+                whereWritten = True
 
-            buffer.write(f"{separator}where {generic_type.type_name}: {generic_type.constraint.getText()}")
+            if(generic_type.instantiable == True):
+                if(whereWritten == False):
+                    buffer.write(f"{separator}where: new()")
+                else:
+                    buffer.write(f", new()")
 
         return buffer.getvalue()
 

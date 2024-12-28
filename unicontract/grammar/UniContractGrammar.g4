@@ -97,6 +97,6 @@ generic
     ;
 
     generic_type
-        : IDENTIFIER ('constraint' qualifiedName)?
+        : IDENTIFIER ('constraint' qualifiedName)? 'instantiable'?
         ;
 

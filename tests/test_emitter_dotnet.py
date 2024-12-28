@@ -92,7 +92,7 @@ using System.Collections.Generic;
 
 namespace SomeNamespace
 {
-    enum SomeEnum
+    public enum SomeEnum
     {
         Value1,
         Value2,
@@ -142,7 +142,7 @@ namespace SomeNamespace
 {
     /// doc line 1 for enum
     /// doc line 2 for enum
-    enum SomeEnum
+    public enum SomeEnum
     {
         /// doc line 1 for enum value 1
         /// doc line 2 for enum value 1
@@ -179,7 +179,7 @@ using System.Collections.Generic;
 
 namespace SomeNamespace
 {
-    interface SomeInterface
+    public interface SomeInterface
     {
     }
 }
@@ -214,7 +214,7 @@ using System.Collections.Generic;
 namespace SomeNamespace
 {
 
-    interface SomeInterface
+    public interface SomeInterface
     {
         public string name { get; set; }
         public int value { get; set; }
@@ -253,11 +253,11 @@ using System.Collections.Generic;
 namespace SomeNamespace
 {
 
-    interface SomeInterface
+    public interface SomeInterface
     {
-        int Create(string id, decimal type);
-        Task<int> CreateAsync(string id, DateOnly now);
-        void Done();
+        public int Create(string id, decimal type);
+        public Task<int> CreateAsync(string id, DateOnly now);
+        public void Done();
     }
 
 }
@@ -331,10 +331,10 @@ namespace SomeNamespace
 {
 
     /// this interface will help you to createm modify and delete Partners
-    interface Partner
+    public interface Partner
     {
 
-        enum Type
+        public enum Type
         {
             PrivatePerson,
             Company,
@@ -346,24 +346,24 @@ namespace SomeNamespace
         public Type type { get; set;}
 
         ///method without param 
-        int Create();
+        public int Create();
         ///async method without param 
-        Task<int> CreateAsync();
+        public Task<int> CreateAsync();
         ///async method without param and without return value
-        Task CreateAsync2();
+        public Task CreateAsync2();
         ///method with one param
-        bool DeletePartnerNormal(int partnerId);
+        public bool DeletePartnerNormal(int partnerId);
         ///method with two param
-        bool DeletePartnerMultiple2(int partnerId1, int partnerId2);
+        public bool DeletePartnerMultiple2(int partnerId1, int partnerId2);
         ///method with 5 param
-        bool DeletePartnerMultiple5(
+        public bool DeletePartnerMultiple5(
             int partnerId1, 
             int partnerId2, 
             int partnerId3, 
             int partnerId4, 
             int partnerId5);
         ///method with documented parameters 
-        bool DeletePartnerForce(
+        public bool DeletePartnerForce(
             ///deleted partner id
             int partnerId, 
             ///delete when has a reference
@@ -381,7 +381,7 @@ namespace SomeNamespace
         engine = Engine()
         session = Session(Source.CreateFromText("""
 namespace SomeNamespace{
-    interface SomeInerface<T constraint SomeInerface2> {
+    interface SomeInerface<T constraint SomeInerface2 instantiable> {
         property name: T
 
         method Func1() => T
@@ -404,14 +404,14 @@ using System.Collections.Generic;
 
 namespace SomeNamespace
 {
-    interface SomeInerface<T>
-        where T: SomeInerface2
+    public interface SomeInerface<T>
+        where T: SomeInerface2, new()
     {
 
         public T name { get; set; }
 
-        T Func1();
-        void Func2<K>(K k) where K: SomeInerface2;
+        public T Func1();
+        public void Func2<K>(K k) where K: SomeInerface2;
     }
 }
 """

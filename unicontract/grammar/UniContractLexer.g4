@@ -51,6 +51,7 @@ METHOD: 'method';
 READONLY: 'readonly';
 ASYNC: 'async';
 CONSTRAINT: 'constraint';
+INSTANTIABLE: 'instantiable';
 
 // syntax controllers
 IDENTIFIER: [a-z][a-z_0-9]*;

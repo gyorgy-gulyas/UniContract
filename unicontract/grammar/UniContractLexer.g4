@@ -40,6 +40,7 @@ STRING: 'string';
 BOOLEAN: 'boolean';
 BYTES: 'bytes';
 STREAM: 'stream';
+ANY: 'any';
 LIST: 'list';
 MAP: 'map';
 

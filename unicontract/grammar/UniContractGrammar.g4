@@ -22,7 +22,7 @@ namespace_elements
     ;
    
 interface
-    : DOCUMENT_LINE* 'interface' IDENTIFIER generic? inherits? '{' interface_element* '}'
+    : DOCUMENT_LINE* 'interface' IDENTIFIER generic? inherits* '{' interface_element* '}'
     ;
 
     interface_element
@@ -62,6 +62,7 @@ type
         | 'boolean'
         | 'bytes'
         | 'stream'
+        | 'any'
         ;
 
     reference_type
@@ -81,7 +82,7 @@ qualifiedName
     ;
 
 inherits
-    : 'inherits' qualifiedName (',' qualifiedName)*
+    : 'inherits' reference_type (',' reference_type)*
     ;
 
 enum

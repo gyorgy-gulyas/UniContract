@@ -179,7 +179,9 @@ class DotnetEmitter:
                 firstInherit = False
             else:
                 buffer.write(", ")
-            buffer.write(f"{inherit.getText()}")
+            buffer.write(f"{inherit.reference_name.getText()}")
+            if(inherit.generic):
+                buffer.write(self.genericText(inherit.generic))
 
         # Process generic type constraints
         if (interface.generic):
@@ -322,6 +324,8 @@ class DotnetEmitter:
         Converts a primitive type to its .NET representation.
         """
         match type.primtiveKind:
+            case primitive_type.PrimtiveKind.Any:
+                return "object"
             case primitive_type.PrimtiveKind.Integer:
                 return "int"
             case primitive_type.PrimtiveKind.Number:

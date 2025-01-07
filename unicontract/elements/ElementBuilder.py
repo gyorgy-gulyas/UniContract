@@ -98,12 +98,6 @@ class ElementBuilder(UniContractGrammarVisitor):
             value.parent = result
             result.generic = value
 
-        if (ctx.inherits() != None):
-            inherits: List[qualified_name] = self.visit(ctx.inherits())
-            for inherit in inherits:
-                inherit.parent = result
-            result.inherits = inherits
-
         counter = 0
         while True:
             document_line = ctx.DOCUMENT_LINE((counter))
@@ -111,6 +105,16 @@ class ElementBuilder(UniContractGrammarVisitor):
                 break
             counter = counter + 1
             result.document_lines.append(document_line.getText()[1:])
+
+        counter = 0
+        while True:
+            inherit = ctx.inherits((counter))
+            if (inherit == None):
+                break
+            counter = counter + 1
+            child = self.visit(inherit)
+            child.parent = result
+            result.inherits.append(child)
 
         counter = 0
         while True:
@@ -251,6 +255,8 @@ class ElementBuilder(UniContractGrammarVisitor):
             result.primtiveKind = primitive_type.PrimtiveKind.Bytes
         elif (ctx.STREAM() != None):
             result.primtiveKind = primitive_type.PrimtiveKind.Stream
+        elif (ctx.ANY() != None):
+            result.primtiveKind = primitive_type.PrimtiveKind.Any
 
         return result
 
@@ -358,19 +364,7 @@ class ElementBuilder(UniContractGrammarVisitor):
 
     # Visit a parse tree produced by UniContractGrammar#inherits.
     def visitInherits(self, ctx: UniContractGrammar.InheritsContext):
-        result: List[qualified_name] = []
-
-        counter = 0
-        while True:
-            base_class = ctx.qualifiedName((counter))
-            if (base_class == None):
-                break
-            counter = counter + 1
-            child: qualified_name = self.visit(base_class)
-            child.parent = result
-            result.append(child)
-
-        return result
+        return self.visitChildren(ctx)
 
     # Visit a parse tree produced by UniContractGrammar#generic.
     def visitGeneric(self, ctx: UniContractGrammar.GenericContext):

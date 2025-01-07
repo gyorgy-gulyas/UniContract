@@ -121,7 +121,7 @@ class enum_element(hinted_base_element):
 class interface(internal_scoped_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
-        self.inherits: List[qualified_name] = []
+        self.inherits: List[reference_type] = []
         self.name: str = None
         self.generic: generic = None
         self.methods: List[interface_method] = []
@@ -226,6 +226,7 @@ class primitive_type(type):
         self.primtiveKind: primitive_type.PrimtiveKind = None
 
     class PrimtiveKind(Enum):
+        Any = 0,
         Integer = 1
         Number = 2
         Float = 2

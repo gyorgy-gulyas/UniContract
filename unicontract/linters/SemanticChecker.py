@@ -69,14 +69,14 @@ class SemanticChecker(ElementVisitor):
         # Validate each inherited interface.
         for inherit in _interface.inherits:
             # Attempt to resolve the inherited interface and retrieve any error message.
-            base_class, message = self.__get_referenced_element(_interface.parent, inherit)
+            base_class, message = self.__get_referenced_element(_interface.parent, inherit.reference_name)
 
             if base_class == None:
                 # If the inherited element cannot be resolved, raise an error.
-                self.__error(inherit, f"The element '{inherit.getText()}' referred in inheritance is not found. {message}")
+                self.__error(inherit, f"The element '{inherit.reference_name.getText()}' referred in inheritance is not found. {message}")
             elif not isinstance(base_class, interface):
                 # If the inherited element is not an interface, raise an error.
-                self.__error(inherit, f"The element '{inherit.getText()}' referred in inheritance is not an event.")
+                self.__error(inherit, f"The element '{inherit.reference_name.getText()}' referred in inheritance is not an event.")
 
         # Check for naming conflicts with other elements in the same scope.
         for neighbour in scope.getChildren():
@@ -269,19 +269,16 @@ class SemanticChecker(ElementVisitor):
         # If the reference name has more than one part, it cannot be a generic type.
         if (len(name.names) != 1):
             return None
-
-        # Get the current scope of the provided parent element.
-        scope = self.__get_current_scope(parent)
-
+        
         # Traverse up the scope hierarchy to find an interface with a generic definition.
         while True:
             # If no more scopes exist, break out of the loop.
-            if (scope == None):
+            if (parent == None):
                 break
 
             # Check if the current scope is an interface.
-            if isinstance(scope, interface):
-                _interface: interface = scope
+            if isinstance(parent, interface):
+                _interface: interface = parent
 
                 # If the interface has generic types defined, search through them.
                 if _interface.generic != None:
@@ -290,8 +287,19 @@ class SemanticChecker(ElementVisitor):
                         if generic_type.type_name == name.names[0]:
                             return generic_type
 
+            # Check if the current scope is an interface_method.
+            if isinstance(parent, interface_method):
+                _method: interface_method = parent
+
+                # If the method has generic types defined, search through them.
+                if _method.generic != None:
+                    for generic_type in _method.generic.types:
+                        # Return the generic type if its name matches the provided name.
+                        if generic_type.type_name == name.names[0]:
+                            return generic_type
+
             # Move to the parent scope and continue the search.
-            scope = scope.parent
+            parent = parent.parent
 
         # Return None if no matching generic type is found.
         return None

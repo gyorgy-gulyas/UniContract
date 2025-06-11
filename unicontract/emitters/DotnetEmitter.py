@@ -250,24 +250,30 @@ class DotnetEmitter:
         if (method.generic):
             buffer.write(self.genericText(method.generic))
 
-        buffer.write(f"( ")
+        buffer.write(f"(")
 
-        # Check if parameters should be broken into multiple lines
-        break_lines = any(param.document_lines for param in method.params) or len(method.params) >= 5
+        if( len(method.params) > 0 ):
+            # first space before the params
+            buffer.write(f" ")
 
-        # Iterate over method parameters
-        firstParam: bool = True
-        for param in method.params:
-            if not firstParam:
-                buffer.write(", ")
-            if break_lines:
-                buffer.write("\n")
-                buffer.write(self.documentLines(param, indent+1))
-                buffer.write(f"{self.tab(indent+1)}")
-            buffer.write(f"{self.typeText(param.type)} {param.name}")
-            firstParam = False
+            # Check if parameters should be broken into multiple lines
+            break_lines = any(param.document_lines for param in method.params) or len(method.params) >= 5
 
-        buffer.write(f" )")
+            # Iterate over method parameters
+            firstParam: bool = True
+            for param in method.params:
+                if not firstParam:
+                    buffer.write(", ")
+                if break_lines:
+                    buffer.write("\n")
+                    buffer.write(self.documentLines(param, indent+1))
+                    buffer.write(f"{self.tab(indent+1)}")
+                buffer.write(f"{self.typeText(param.type)} {param.name}")
+                firstParam = False
+            # last space after the params
+            buffer.write(f" ")
+
+        buffer.write(f")")
 
         # Process generic type constraints
         if (method.generic):

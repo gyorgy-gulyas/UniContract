@@ -1,7 +1,7 @@
 from __future__ import annotations
 from unicontract.grammar.UniContractGrammar import *
 from unicontract.grammar.UniContractGrammarVisitor import *
-from unicontract.elements.Elements import *
+from .Elements import *
 
 
 class ElementBuilder(UniContractGrammarVisitor):

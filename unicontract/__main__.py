@@ -9,48 +9,40 @@ from unicontract.linters.SemanticChecker import *
 
 # Adds known arguments to the argument parser
 def __add_known_arguments(arg_parser: argparse.ArgumentParser):
-    # Input contract file argument, required
     arg_parser.add_argument("-i",
                             "--input",
                             help="input contract file ",
                             required=True,
                             default=[])
-    # Linter files argument, multiple files can be specified
     arg_parser.add_argument("-l",
                             "--linter",
                             help="used linter python file(s), if you specify multiple files, all linters will be called",
                             nargs='+',
                             default=[] )
-    # Emitter files argument, multiple files can be specified
     arg_parser.add_argument("-e",
                             "--emitter",
-                            help="used emitter(s), if you specify multiple emitter, then all emitters will be called. The emmiter can a built-oin emitter (json,dotnet,java) or can a emitter pyton file",
+                            help="used emitter(s), if you specify multiple emitter, then all emitters will be called. The emmiter can a built-in emitter (json,dotnet,java,rust) or can a emitter pyton file",
                             nargs='+',
                             default=[] )
-    # Output directory argument
     arg_parser.add_argument("-o",
                             "--output-dir",
                             help="output directory",
                             type=str,
                             default="./")
-    # Verbose flag for detailed output
     arg_parser.add_argument("-v",
                             "--verbose",
                             help="detailed output",
                             action="store_true")
-    # Abort on error flag, execution stops if any error occurs
     arg_parser.add_argument("-aoe",
                             "--abort-on-error",
                             help="when any file has an error, or any of the linters reports an error, then no emitter will be called and execution is aborted. Default value is True",
                             default="True",
                             action="store_true")
-    # Abort on warning flag, execution stops if any warning occurs
     arg_parser.add_argument("-aow",
                             "--abort-on-warning",
                             help="when any file has a warning, or any of the linters reports a warning, then no emitter will be called and execution is aborted. Default value is False",
                             default="False",
                             action="store_true")
-    # Config file argument, defines the configuration in JSON format
     arg_parser.add_argument("-c",
                             "--config-file",
                             help="define the configuration in json format. If the option is not present, then the default ./configuration.json will be used")
@@ -154,7 +146,8 @@ def __call_emiters(session: Session, args, configuration: Dict[str, str]):
                 spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JsonEmitter.py"))
             case "java":
                 spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JavaEmitter.py"))
-                pass
+            case "rust":
+                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/RustEmitter.py"))
             case _:
                 spec = importlib.util.spec_from_file_location(Path(emitter_name).stem, emitter_name)
 

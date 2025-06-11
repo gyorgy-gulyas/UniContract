@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+from typing import Dict
+
 from antlr4.error.ErrorListener import ErrorListener
 from antlr4 import *
-from typing import Dict
 from unicontract.grammar import *
 from unicontract.elements.ElementBuilder import *
 

@@ -59,7 +59,7 @@ class import_(hinted_base_element):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.name: str = ""
-        self.contract: contract = ""
+        self.contract: contract = None
 
 
 class contract(IScope):

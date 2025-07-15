@@ -11,7 +11,8 @@
             "justMyCode": false,
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-i", "d:/Projects.OWN/PolyPersist/contracts/PolyPersist.contract", "--verbose", "--output-dir", "d:/Projects.OWN/PolyPersist/interfaces/dotnet", "--emitter", "dotnet" ],
+            //"args": ["-i", "d:/Projects.OWN/PolyPersist/contracts/PolyPersist.contract", "--verbose", "--output-dir", "d:/Projects.OWN/PolyPersist/interfaces/dotnet", "--emitter", "dotnet" ],
+            "args": ["-i", "c:/2/PolyPersist/contracts/PolyPersist.contract", "--verbose", "--output-dir", "c:/2/PolyPersist/interfaces/dotnet", "--emitter", "dotnet" ],
             "envFile": "${workspaceRoot}/.env",
             "cwd": "${workspaceFolder}"
         }

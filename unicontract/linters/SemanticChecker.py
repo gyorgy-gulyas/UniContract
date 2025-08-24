@@ -132,6 +132,14 @@ class SemanticChecker(ElementVisitor):
         """
         Validates an interface method, specifically checking constraints for generic types.
         """
+        # Retrieve the parent interface of the property.
+        parent_interface: interface = interface_method.parent
+
+        # collect all generaic names from parnet interface, if any
+        parent_generic_names:List[str] = []
+        if( parent_interface.generic != None ):
+            for generic in parent_interface.generic.types:
+                parent_generic_names.append(generic.type_name)
 
         # Check if the method has generic types defined.
         if interface_method.generic != None:
@@ -139,10 +147,11 @@ class SemanticChecker(ElementVisitor):
             for generic_type in interface_method.generic.types:
                 # If a generic type specifies an 'extends' constraint, resolve it.
                 if generic_type.constraint != None:
-                    extends, message = self.__get_referenced_element(interface_method.parent, generic_type.constraint)
-                    # Raise an error if the 'extends' reference cannot be resolved.
-                    if extends == None:
-                        self.__error(generic_type, f"The generic type extend reference '{generic_type.constraint.getText()}' not found. {message}")
+                    if( generic_type.constraint.getText() not in parent_generic_names):
+                        extends, message = self.__get_referenced_element(interface_method.parent, generic_type.constraint)
+                        # Raise an error if the 'extends' reference cannot be resolved.
+                        if extends == None:
+                            self.__error(generic_type, f"The generic type extend reference '{generic_type.constraint.getText()}' not found. {message}")
 
     def visitInterfaceMethodParam(self, interface_method_param: interface_method_param, parentData: Any) -> Any:
         """

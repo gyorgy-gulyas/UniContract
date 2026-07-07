@@ -76,7 +76,7 @@ class SemanticChecker(ElementVisitor):
                 self.__error(inherit, f"The element '{inherit.reference_name.getText()}' referred in inheritance is not found. {message}")
             elif not isinstance(base_class, interface):
                 # If the inherited element is not an interface, raise an error.
-                self.__error(inherit, f"The element '{inherit.reference_name.getText()}' referred in inheritance is not an event.")
+                self.__error(inherit, f"The element '{inherit.reference_name.getText()}' referred in inheritance is not an interface.")
 
         # Check for naming conflicts with other elements in the same scope.
         for neighbour in scope.getChildren():
@@ -85,7 +85,7 @@ class SemanticChecker(ElementVisitor):
                 continue
             # If another element has the same name, raise a conflict error.
             if neighbour.name == _interface.name:
-                self.__error(_interface, f"A value object '{_interface.name}' conflicts with the same name as an element in {neighbour.locationText()}.")
+                self.__error(_interface, f"An interface '{_interface.name}' conflicts with the same name as an element in {neighbour.locationText()}.")
 
         # If the interface has generic types, validate their constraints.
         if _interface.generic != None:

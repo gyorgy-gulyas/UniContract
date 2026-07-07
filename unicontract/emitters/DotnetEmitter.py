@@ -97,7 +97,7 @@ class DotnetEmitter:
                 # Add using statement if the namespace differs from the current one
                 if imported_namespace.name.getText() != current_namespace.name.getText():
                     buffer.write(self.documentLines(_import, indent=0))
-                    buffer.write(f"using {_import.name};\n")
+                    buffer.write(f"using {imported_namespace.name.getText()};\n")
 
         # Return the collected output as a string
         return buffer.getvalue()
@@ -290,6 +290,7 @@ class DotnetEmitter:
             if not firstParam:
                 buffer.write(", ")
             buffer.write(generic_type.type_name)
+            firstParam = False
         buffer.write(">")
         return buffer.getvalue()
 
@@ -305,7 +306,7 @@ class DotnetEmitter:
 
             if(generic_type.instantiable == True):
                 if(whereWritten == False):
-                    buffer.write(f"{separator}where: new()")
+                    buffer.write(f"{separator}where {generic_type.type_name}: new()")
                 else:
                     buffer.write(f", new()")
 
@@ -431,7 +432,7 @@ class dotnet_configuration:
         """
         Reads the default 'using' statements configuration.
         """
-        self.defaultUsings: List[str] = ["System", "System.Threading.Tasks", "System.Collections.Generic"]
+        self.defaultUsings: List[str] = ["System", "System.IO", "System.Threading.Tasks", "System.Collections.Generic"]
         if "dotnet.default_usings" in configuration:
             value = configuration["dotnet.default_usings"]
             if isinstance(value, list) and all(isinstance(item, str) for item in value):

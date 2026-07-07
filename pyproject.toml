@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unicontract"
+version = "0.2.1"
+description = "UniContract — language-agnostic interface contract compiler: parses a .contract interface DSL and emits interface code (.NET/C#, JSON, and more)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Gulyás György Tamás" }]
+keywords = ["interface", "contract", "code-generation", "dsl", "antlr"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+# Runtime dependency. The only hard requirement is the ANTLR runtime used by the
+# generated parser/lexer and the Engine. Everything else is optional (see extras).
+dependencies = [
+    "antlr4-python3-runtime==4.13.2",
+]
+
+[project.optional-dependencies]
+# Test/dev tooling. pythonnet+clr-loader compile & verify the generated C# in the
+# dotnet emitter tests; jsondiff compares emitter output; PyYAML for config fixtures.
+dev = [
+    "jsondiff>=2.2.1",
+    "PyYAML>=6.0.2",
+    "pythonnet>=3.0.4",
+    "clr-loader>=0.2.6",
+    "pytest>=7.0",
+]
+
+[project.scripts]
+unicontract = "unicontract.__main__:main"
+
+[tool.setuptools.packages.find]
+# Ship only the unicontract package; never package the test suite.
+include = ["unicontract*"]
+exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+# Non-.py runtime assets bundled inside the package.
+unicontract = [
+    "configuration.json",
+    "grammar/*.g4",
+    "grammar/*.tokens",
+    "grammar/*.interp",
+]
+
+[tool.pytest.ini_options]
+# Tests are unittest-style but discoverable/runnable via pytest too.
+testpaths = ["tests"]
+python_files = ["test_*.py"]

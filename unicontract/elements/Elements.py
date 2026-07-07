@@ -205,7 +205,7 @@ class type(base_element):
             case type.Kind.Reference:
                 data = visitor.visitReferenceType(self, parentData, memberName)
                 if (self.generic):
-                    visitor.visitGeneric(self.generic, parentData)
+                    self.generic.visit(visitor, data)
             case type.Kind.List:
                 data = visitor.visitListType(self, parentData, memberName)
                 if (self.item_type != None):
@@ -226,17 +226,17 @@ class primitive_type(type):
         self.primtiveKind: primitive_type.PrimtiveKind = None
 
     class PrimtiveKind(Enum):
-        Any = 0,
+        Any = 0
         Integer = 1
         Number = 2
-        Float = 2
-        Date = 3,
-        Time = 4,
-        DateTime = 5,
-        String = 6,
-        Boolean = 7,
-        Bytes = 8,
-        Stream = 9,
+        Float = 3
+        Date = 4
+        Time = 5
+        DateTime = 6
+        String = 7
+        Boolean = 8
+        Bytes = 9
+        Stream = 10
 
 
 class reference_type(type):

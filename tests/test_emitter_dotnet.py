@@ -87,6 +87,7 @@ namespace SomeNamespace{
         self.assertEqual(len(result), 1)
         expected = """
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -135,6 +136,7 @@ namespace SomeNamespace{
 // </auto-generated>
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -174,6 +176,7 @@ namespace SomeNamespace{
         self.assertEqual(len(result), 1)
         expected = """
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -208,6 +211,7 @@ namespace SomeNamespace{
         self.assertEqual(len(result), 1)
         expected = """
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -247,6 +251,7 @@ namespace SomeNamespace{
         self.assertEqual(len(result), 1)
         expected = """
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -324,6 +329,7 @@ namespace SomeNamespace{
 // </auto-generated>
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -399,6 +405,7 @@ namespace SomeNamespace{
         self.assertEqual(len(result), 2)
         expected = """
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -418,6 +425,34 @@ namespace SomeNamespace
         self.assertEqual(result[0].fileName, "SomeInerface.cs")
         equal, index, diff_part_1, diff_part_2 = dotnet_code_helper.compare_and_extract_diff(expected, result[0].content)
         self.assertTrue(equal)
+        compiled, errors, assembly = dotnet_code_helper.compile_debug(result, dotnet_code_helper.assembly_name())
+        self.assertTrue(compiled)
+
+    def test_type_emission_multiparam_float_instantiable_ok(self):
+        # Guards UNI-01 (multi-param generic comma), UNI-02 (float != number),
+        # UNI-04 ('instantiable' with no constraint -> 'where T: new()').
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace Ns {
+    interface IKey {
+    }
+    interface IMap<TKey constraint IKey, TValue instantiable> {
+        property ratio: float
+        property count: number
+    }
+}"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        emitter = DotnetEmitter()
+        result = emitter.Emit(session)
+        content = next(f.content for f in result if f.fileName == "IMap.cs")
+
+        self.assertIn("interface IMap<TKey, TValue>", content)   # UNI-01: comma kept
+        self.assertIn("where TValue: new()", content)            # UNI-04: type name present
+        self.assertIn("double ratio", content)                   # UNI-02: float -> double
+        self.assertIn("decimal count", content)                  # UNI-02: number -> decimal (distinct)
+
         compiled, errors, assembly = dotnet_code_helper.compile_debug(result, dotnet_code_helper.assembly_name())
         self.assertTrue(compiled)
 

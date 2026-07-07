@@ -11,9 +11,8 @@ from unicontract.linters.SemanticChecker import *
 def __add_known_arguments(arg_parser: argparse.ArgumentParser):
     arg_parser.add_argument("-i",
                             "--input",
-                            help="input contract file ",
-                            required=True,
-                            default=[])
+                            help="input .contract file",
+                            required=True)
     arg_parser.add_argument("-l",
                             "--linter",
                             help="used linter python file(s), if you specify multiple files, all linters will be called",
@@ -35,14 +34,14 @@ def __add_known_arguments(arg_parser: argparse.ArgumentParser):
                             action="store_true")
     arg_parser.add_argument("-aoe",
                             "--abort-on-error",
-                            help="when any file has an error, or any of the linters reports an error, then no emitter will be called and execution is aborted. Default value is True",
-                            default="True",
-                            action="store_true")
+                            help="when any file has an error, or any of the linters reports an error, then no emitter will be called and execution is aborted. Default: enabled (use --no-abort-on-error to disable)",
+                            default=True,
+                            action=argparse.BooleanOptionalAction)
     arg_parser.add_argument("-aow",
                             "--abort-on-warning",
-                            help="when any file has a warning, or any of the linters reports a warning, then no emitter will be called and execution is aborted. Default value is False",
-                            default="False",
-                            action="store_true")
+                            help="when any file has a warning, or any of the linters reports a warning, then no emitter will be called and execution is aborted. Default: disabled (use --abort-on-warning to enable)",
+                            default=False,
+                            action=argparse.BooleanOptionalAction)
     arg_parser.add_argument("-c",
                             "--config-file",
                             help="define the configuration in json format. If the option is not present, then the default ./configuration.json will be used")
@@ -78,7 +77,7 @@ def __parse_input_files(args, configuration: Dict[str, str]) -> Session:
 
     # Check if the input file exists, otherwise exit
     if os.path.exists(args.input) == False:
-        exit(f"'{input}' file does not exist")
+        exit(f"'{args.input}' file does not exist")
 
     # Create a session from the input file
     session = Session(Source.CreateFromFile(args.input))
@@ -104,7 +103,7 @@ def __check_errors(session: Session, args, action: str):
             exit("abort on error is enabled, process is aborted")
 
         # Abort if any warning occurs and abort-on-warning is set
-        if (session.HasAnyWarning() == True and args.abort_on_warinig):
+        if (session.HasAnyWarning() == True and args.abort_on_warning):
             exit("abort on warning is enabled, process is aborted")
     else:
         # Print info if verbose flag is set and no errors/warnings found
@@ -139,17 +138,19 @@ def __call_emiters(session: Session, args, configuration: Dict[str, str]):
         if (args.verbose):
             print(f"information: calling emitter:'{emitter_name}'")
         
-        match emitter_name:
-            case "dotnet":
-                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/DotnetEmitter.py"))
-            case "json":
-                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JsonEmitter.py"))
-            case "java":
-                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/JavaEmitter.py"))
-            case "rust":
-                spec = importlib.util.spec_from_file_location("dotnet", os.path.join(Path(__file__).parent, "emitters/RustEmitter.py"))
-            case _:
-                spec = importlib.util.spec_from_file_location(Path(emitter_name).stem, emitter_name)
+        builtin_emitters = {
+            "dotnet": "emitters/DotnetEmitter.py",
+            "json": "emitters/JsonEmitter.py",
+            "java": "emitters/JavaEmitter.py",
+            "rust": "emitters/RustEmitter.py",
+        }
+        if emitter_name in builtin_emitters:
+            emitter_path = os.path.join(Path(__file__).parent, builtin_emitters[emitter_name])
+            if os.path.exists(emitter_path) == False:
+                exit(f"built-in emitter '{emitter_name}' is not available yet ({builtin_emitters[emitter_name]} is missing)")
+            spec = importlib.util.spec_from_file_location(emitter_name, emitter_path)
+        else:
+            spec = importlib.util.spec_from_file_location(Path(emitter_name).stem, emitter_name)
 
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
@@ -159,14 +160,11 @@ def __call_emiters(session: Session, args, configuration: Dict[str, str]):
 def main():
     """Main function to process input files and call linters and emitters."""
     # Create argument parser and add known arguments
-    arg_parser = argparse.ArgumentParser(description="This program processes d3i files and produces results according to the specified emitter.")
+    arg_parser = argparse.ArgumentParser(prog="unicontract", description="Parses a .contract interface definition and produces code with the specified emitter(s).")
     __add_known_arguments(arg_parser)
 
-    # Parse known arguments and unknown arguments
+    # Parse known arguments and unknown arguments (--input is required, argparse enforces it)
     args, unknown_args = arg_parser.parse_known_args()
-    # Check if at least one input file is specified, otherwise print error
-    if (len(args.input) == 0):
-        print("at least one input must be specified, use -h to see help.")
 
     # Read configuration file and parse input files
     configuration = __read_config_file(args, unknown_args)

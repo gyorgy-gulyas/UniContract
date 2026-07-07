@@ -759,6 +759,26 @@ namespace someNamespace {
         diff = jsondiff.diff(result, expected, syntax='symmetric')
         self.assertEqual(0, len(diff))
 
+    def test_map_and_reference_generic_ok(self):
+        # Guards UNI-10 (map emitted as map_type, not list_type) and
+        # UNI-08 (reference-type generic arguments are emitted, not dropped).
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace Ns {
+    interface IEntity {
+    }
+    interface IRepo<T constraint IEntity> {
+        property byId: map[string, IRepo<IEntity>]
+    }
+}"""))
+        engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+        result = JsonEmitter().Emit(session)
+        self.assertIn('"$type": "map_type"', result)          # UNI-10
+        self.assertIn('"reference_name": "IRepo"', result)
+        self.assertIn('"$type": "generic"', result)           # UNI-08: reference generic populated
+
 
 if __name__ == "__main__":
     unittest.main()

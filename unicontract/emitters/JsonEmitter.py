@@ -156,7 +156,7 @@ class JsonEmitter(ElementVisitor):
 
     def visitMapType(self, map_type: map_type, parentData: Any, memberName: str) -> Any:
         data = {
-            "$type": "list_type",
+            "$type": "map_type",
             "kind": str(map_type.kind),
             "key_type": {},
             "value_type": {}

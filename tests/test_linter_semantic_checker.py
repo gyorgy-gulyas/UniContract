@@ -166,5 +166,45 @@ namespace Namespace2 {
         data = root.visit(checker, None)
         self.assertFalse(session.HasAnyError())
 
+    def test_inherit_from_non_interface_reports_interface_message(self):
+        # UNI-11: the message used to say "is not an event." (a d3i remnant).
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace N {
+    enum E {
+        A
+    }
+    interface I inherits E {
+    }
+}
+"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+        checker = SemanticChecker(session)
+        root.visit(checker, None)
+
+        text = " ".join(d.toText() for d in session.diagnostics)
+        self.assertIn("is not an interface", text)
+        self.assertNotIn("event", text)
+
+    def test_interface_name_conflict_says_interface_not_value_object(self):
+        # UNI-11: the conflict message used to say "A value object ..." (a d3i remnant).
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace N {
+    interface Dup {
+    }
+    interface Dup {
+    }
+}
+"""))
+        root = engine.Build(session)
+        checker = SemanticChecker(session)
+        root.visit(checker, None)
+
+        text = " ".join(d.toText() for d in session.diagnostics)
+        self.assertIn("interface 'Dup'", text)
+        self.assertNotIn("value object", text)
+
 if __name__ == "__main__":
     unittest.main()

@@ -20,7 +20,7 @@ def __add_known_arguments(arg_parser: argparse.ArgumentParser):
                             default=[] )
     arg_parser.add_argument("-e",
                             "--emitter",
-                            help="used emitter(s), if you specify multiple emitter, then all emitters will be called. The emmiter can a built-in emitter (json,dotnet,java) or can a emitter pyton file",
+                            help="used emitter(s), if you specify multiple emitter, then all emitters will be called. The emmiter can a built-in emitter (json,dotnet,java,python) or can a emitter pyton file",
                             nargs='+',
                             default=[] )
     arg_parser.add_argument("-o",
@@ -142,6 +142,7 @@ def __call_emiters(session: Session, args, configuration: Dict[str, str]):
             "dotnet": "emitters/DotnetEmitter.py",
             "json": "emitters/JsonEmitter.py",
             "java": "emitters/JavaEmitter.py",
+            "python": "emitters/PythonEmitter.py",
         }
         if emitter_name in builtin_emitters:
             emitter_path = os.path.join(Path(__file__).parent, builtin_emitters[emitter_name])

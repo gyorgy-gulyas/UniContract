@@ -197,6 +197,7 @@ class type(base_element):
         Reference = 2
         List = 3
         Map = 4
+        Query = 5
 
     def visit(self, visitor: ElementVisitor, parentData: Any, memberName: str):
         match self.kind:
@@ -216,6 +217,10 @@ class type(base_element):
                     self.key_type.visit(visitor, data, "key_type")
                 if (self.value_type != None):
                     self.value_type.visit(visitor, data, "value_type")
+            case type.Kind.Query:
+                data = visitor.visitQueryType(self, parentData, memberName)
+                if (self.generic):
+                    self.generic.visit(visitor, data)
 
         super().visit(visitor, data)
 
@@ -250,6 +255,12 @@ class list_type(type):
     def __init__(self, fileName, pos):
         super().__init__(fileName, pos)
         self.item_type = None
+
+
+class query_type(type):
+    def __init__(self, fileName, pos):
+        super().__init__(fileName, pos)
+        self.generic: generic = None
 
 
 class map_type(type):

@@ -197,6 +197,8 @@ class PythonEmitter:
                 return self.typeTextList(type)
             case type.Kind.Map:
                 return self.typeTextMap(type)
+            case type.Kind.Query:
+                return self.typeTextQuery(type)
 
     def typeTextPrimitive(self, type: primitive_type) -> str:
         match type.primtiveKind:
@@ -229,6 +231,9 @@ class PythonEmitter:
         if reference_type.generic is not None:
             buffer.write(f"[{self.genericArgs(reference_type.generic)}]")
         return buffer.getvalue()
+
+    def typeTextQuery(self, query_type: query_type) -> str:
+        return f"Iterable[{self.genericArgs(query_type.generic)}]"
 
     def typeTextList(self, type: list_type) -> str:
         return f"List[{self.typeText(type.item_type)}]"

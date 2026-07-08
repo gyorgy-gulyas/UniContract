@@ -134,6 +134,15 @@ class UniContractGrammarListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by UniContractGrammar#query_type.
+    def enterQuery_type(self, ctx:UniContractGrammar.Query_typeContext):
+        pass
+
+    # Exit a parse tree produced by UniContractGrammar#query_type.
+    def exitQuery_type(self, ctx:UniContractGrammar.Query_typeContext):
+        pass
+
+
     # Enter a parse tree produced by UniContractGrammar#qualifiedName.
     def enterQualifiedName(self, ctx:UniContractGrammar.QualifiedNameContext):
         pass

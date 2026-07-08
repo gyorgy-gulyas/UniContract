@@ -49,6 +49,7 @@ type
     | reference_type
     | list_type
     | map_type
+    | query_type
     ;
     
     primitive_type
@@ -75,6 +76,10 @@ type
 
     map_type
         : 'map' '[' type ',' type ']'
+        ;
+
+    query_type
+        : 'query' generic
         ;
         
 qualifiedName 

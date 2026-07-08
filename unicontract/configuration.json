@@ -39,7 +39,8 @@
         "java.time.LocalDate",
         "java.time.LocalTime",
         "java.time.LocalDateTime",
-        "java.io.InputStream"
+        "java.io.InputStream",
+        "java.util.stream.Stream"
     ],
 
     "python.create_folder_structure": "True",
@@ -55,7 +56,7 @@
         "from __future__ import annotations",
         "from abc import ABC, abstractmethod",
         "from enum import Enum",
-        "from typing import Any, List, Dict, Optional, Generic, TypeVar, BinaryIO",
+        "from typing import Any, List, Dict, Optional, Generic, TypeVar, BinaryIO, Iterable",
         "from decimal import Decimal",
         "from datetime import date, time, datetime"
     ]

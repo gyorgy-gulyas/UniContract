@@ -278,6 +278,17 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#list_type.
+    def visitQuery_type(self, ctx: UniContractGrammar.Query_typeContext):
+        result = query_type(self.fileName, ctx.start)
+        result.kind = type.Kind.Query
+
+        if (ctx.generic() != None):
+            value: generic = self.visit(ctx.generic())
+            value.parent = result
+            result.generic = value
+
+        return result
+
     def visitList_type(self, ctx: UniContractGrammar.List_typeContext):
         result = list_type(self.fileName, ctx.start)
         result.kind = type.Kind.List

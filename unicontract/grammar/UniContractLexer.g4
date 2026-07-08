@@ -43,6 +43,7 @@ STREAM: 'stream';
 ANY: 'any';
 LIST: 'list';
 MAP: 'map';
+QUERY: 'query';
 
 // qualifiers
 INHERITS: 'inherits';

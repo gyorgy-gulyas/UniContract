@@ -302,5 +302,20 @@ namespace someNamespace {
         self.assertEqual(method.generic.types[0].constraint.getText(), "Normal")
 
 
+    def test_query_type_ok(self):
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace someNamespace {
+    interface Repo<TRecord instantiable> {
+        property all: query<TRecord>
+    }
+}
+"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+        prop = root.namespaces[0].interfaces[0].properties[0]
+        self.assertEqual(prop.type.kind, type.Kind.Query)
+
+
 if __name__ == "__main__":
     unittest.main()

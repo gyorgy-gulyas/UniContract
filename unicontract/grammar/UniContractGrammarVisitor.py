@@ -79,11 +79,6 @@ class UniContractGrammarVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by UniContractGrammar#query_type.
-    def visitQuery_type(self, ctx:UniContractGrammar.Query_typeContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by UniContractGrammar#qualifiedName.
     def visitQualifiedName(self, ctx:UniContractGrammar.QualifiedNameContext):
         return self.visitChildren(ctx)

@@ -317,5 +317,19 @@ namespace someNamespace {
         self.assertEqual(prop.type.kind, type.Kind.Query)
 
 
+    def test_query_type_with_query_method_name_ok(self):
+        # regression: the query<T> type must coexist with a method named Query (case-insensitive lexer)
+        engine = Engine()
+        session = Session(Source.CreateFromText("""
+namespace n {
+    interface Repo<TRecord instantiable> {
+        method Query() => query<TRecord>
+    }
+}
+"""))
+        root = engine.Build(session)
+        self.assertFalse(session.HasAnyError())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -262,6 +262,15 @@ class ElementBuilder(UniContractGrammarVisitor):
 
     # Visit a parse tree produced by UniContractGrammar#reference_type.
     def visitReference_type(self, ctx: UniContractGrammar.Reference_typeContext):
+        # 'query<T>' is a language-mapped type, written with the reference-type generic syntax.
+        if (ctx.qualifiedName() != None and ctx.qualifiedName().getText().lower() == "query" and ctx.generic() != None):
+            q = query_type(self.fileName, ctx.start)
+            q.kind = type.Kind.Query
+            value: generic = self.visit(ctx.generic())
+            value.parent = q
+            q.generic = value
+            return q
+
         result = reference_type(self.fileName, ctx.start)
         result.kind = type.Kind.Reference
 
@@ -278,17 +287,6 @@ class ElementBuilder(UniContractGrammarVisitor):
         return result
 
     # Visit a parse tree produced by UniContractGrammar#list_type.
-    def visitQuery_type(self, ctx: UniContractGrammar.Query_typeContext):
-        result = query_type(self.fileName, ctx.start)
-        result.kind = type.Kind.Query
-
-        if (ctx.generic() != None):
-            value: generic = self.visit(ctx.generic())
-            value.parent = result
-            result.generic = value
-
-        return result
-
     def visitList_type(self, ctx: UniContractGrammar.List_typeContext):
         result = list_type(self.fileName, ctx.start)
         result.kind = type.Kind.List

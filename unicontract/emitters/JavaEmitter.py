@@ -219,6 +219,8 @@ class JavaEmitter:
                 return self.typeTextList(type)
             case type.Kind.Map:
                 return self.typeTextMap(type)
+            case type.Kind.Query:
+                return self.typeTextQuery(type)
 
     def typeTextPrimitive(self, type: primitive_type, boxed: bool = False) -> str:
         # 'boxed' is used inside generics (List<Integer>, CompletableFuture<Boolean>, ...),
@@ -253,6 +255,9 @@ class JavaEmitter:
         if reference_type.generic is not None:
             buffer.write(self.genericText(reference_type.generic))
         return buffer.getvalue()
+
+    def typeTextQuery(self, query_type: query_type) -> str:
+        return f"Stream{self.genericText(query_type.generic)}"
 
     def typeTextList(self, type: list_type) -> str:
         return f"List<{self.typeText(type.item_type, boxed=True)}>"

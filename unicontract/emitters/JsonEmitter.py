@@ -154,6 +154,15 @@ class JsonEmitter(ElementVisitor):
         parentData[memberName] = data
         return data
 
+    def visitQueryType(self, query_type: query_type, parentData: Any, memberName: str) -> Any:
+        data = {
+            "$type": "query_type",
+            "kind": str(query_type.kind),
+            "generic": {}
+        }
+        parentData[memberName] = data
+        return data
+
     def visitMapType(self, map_type: map_type, parentData: Any, memberName: str) -> Any:
         data = {
             "$type": "map_type",

@@ -325,6 +325,8 @@ class DotnetEmitter:
                 return self.typeTextList(type)
             case type.Kind.Map:
                 return self.typeTextMap(type)
+            case type.Kind.Query:
+                return self.typeTextQuery(type)
 
     def typeTextPrimitive(self, type: primitive_type):
         """
@@ -363,6 +365,9 @@ class DotnetEmitter:
         if(reference_type.generic != None):
             buffer.write(self.genericText(reference_type.generic))
         return buffer.getvalue()
+
+    def typeTextQuery(self, query_type: query_type):
+        return f"System.Linq.IQueryable{self.genericText(query_type.generic)}"
 
     def typeTextList(self, type: list_type):
         """

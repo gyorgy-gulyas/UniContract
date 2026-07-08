@@ -43,6 +43,9 @@ class ElementVisitor:
     def visitMapType(self, map_type: map_type, parentData: Any, memberName: str) -> Any:
         pass
 
+    def visitQueryType(self, query_type: query_type, parentData: Any, memberName: str) -> Any:
+        pass
+
     def visitHintedElement(self, hinted_element: hinted_base_element, parentData: Any) -> Any:
         pass
 

@@ -1,8 +1,25 @@
 import os
 import io
+import keyword
 from typing import Dict
 from unicontract.elements.Elements import *
 from unicontract.Engine import *
+
+
+def safe_name(name: str) -> str:
+    """
+    A contract may use a name that Python reserves - 'from', 'class', 'lambda', 'is', ... - and
+    emitting it verbatim is a syntax error, not a subtle problem. Such a name gets the trailing
+    underscore PEP 8 prescribes for exactly this case ('from' -> 'from_'). Nothing else is
+    renamed, so the generated API keeps the contract's own names wherever Python allows it.
+    Soft keywords ('match', 'type', ...) are legal identifiers and stay as they are.
+    """
+    return name + "_" if keyword.iskeyword(name) else name
+
+
+def safe_dotted_name(name: str) -> str:
+    """The same, for a qualified reference: every segment is escaped on its own."""
+    return ".".join(safe_name(part) for part in name.split("."))
 
 
 def DoEmit(session: Session, output_dir: str, configuration: Dict[str, str]):
@@ -85,12 +102,14 @@ class PythonEmitter:
         buffer = io.StringIO()
         buffer.write("\n\n")
         buffer.write(self.documentLines(enum, indent))
-        buffer.write(f"{self.tab(indent)}class {enum.name}(Enum):\n")
+        buffer.write(f"{self.tab(indent)}class {safe_name(enum.name)}(Enum):\n")
         if len(enum.enum_elements) == 0:
             buffer.write(f"{self.tab(indent + 1)}pass\n")
         for enum_element in enum.enum_elements:
             buffer.write(self.documentLines(enum_element, indent + 1))
-            buffer.write(f'{self.tab(indent + 1)}{enum_element.value} = "{enum_element.value}"\n')
+            # Only the member NAME is escaped; its value is what travels on the wire and must stay
+            # exactly as the contract wrote it.
+            buffer.write(f'{self.tab(indent + 1)}{safe_name(enum_element.value)} = "{enum_element.value}"\n')
         return buffer.getvalue()
 
     def interfaceText(self, interface: interface, indent: int = 0) -> str:
@@ -106,7 +125,7 @@ class PythonEmitter:
         # base classes: inherited interfaces (+ Generic[...]) or ABC
         bases: List[str] = []
         for inherit in interface.inherits:
-            base = inherit.reference_name.getText()
+            base = safe_dotted_name(inherit.reference_name.getText())
             if inherit.generic:
                 base += f"[{self.genericArgs(inherit.generic)}]"
             bases.append(base)
@@ -115,7 +134,7 @@ class PythonEmitter:
         if interface.generic:
             bases.append(f"Generic[{self.genericArgs(interface.generic)}]")
 
-        buffer.write(f"{self.tab(indent)}class {interface.name}({', '.join(bases)}):\n")
+        buffer.write(f"{self.tab(indent)}class {safe_name(interface.name)}({', '.join(bases)}):\n")
 
         body = io.StringIO()
         for enum in interface.enums:
@@ -138,16 +157,17 @@ class PythonEmitter:
         """
         buffer = io.StringIO()
         type_text = self.typeText(property.type)
+        name = safe_name(property.name)
         buffer.write("\n")
         buffer.write(self.documentLines(property, indent))
         buffer.write(f"{self.tab(indent)}@property\n")
         buffer.write(f"{self.tab(indent)}@abstractmethod\n")
-        buffer.write(f"{self.tab(indent)}def {property.name}(self) -> {type_text}:\n")
+        buffer.write(f"{self.tab(indent)}def {name}(self) -> {type_text}:\n")
         buffer.write(f"{self.tab(indent + 1)}...\n")
         if not property.isReadonly:
-            buffer.write(f"{self.tab(indent)}@{property.name}.setter\n")
+            buffer.write(f"{self.tab(indent)}@{name}.setter\n")
             buffer.write(f"{self.tab(indent)}@abstractmethod\n")
-            buffer.write(f"{self.tab(indent)}def {property.name}(self, value: {type_text}) -> None:\n")
+            buffer.write(f"{self.tab(indent)}def {name}(self, value: {type_text}) -> None:\n")
             buffer.write(f"{self.tab(indent + 1)}...\n")
         return buffer.getvalue()
 
@@ -164,9 +184,9 @@ class PythonEmitter:
         buffer.write("@abstractmethod\n")
         buffer.write(self.tab(indent))
         buffer.write("async def " if method.isAsync else "def ")
-        buffer.write(f"{method.name}(self")
+        buffer.write(f"{safe_name(method.name)}(self")
         for param in method.params:
-            buffer.write(f", {param.name}: {self.typeText(param.type)}")
+            buffer.write(f", {safe_name(param.name)}: {self.typeText(param.type)}")
         buffer.write(")")
 
         return_text = self.typeText(method.return_type) if method.return_type is not None else "None"
@@ -177,15 +197,16 @@ class PythonEmitter:
     def typeVarDeclarations(self, generic: generic, indent: int) -> str:
         buffer = io.StringIO()
         for generic_type in generic.types:
+            name = safe_name(generic_type.type_name)
             if generic_type.constraint is not None:
                 # a string bound is a lazy forward reference, so no import is required
-                buffer.write(f'{self.tab(indent)}{generic_type.type_name} = TypeVar("{generic_type.type_name}", bound="{generic_type.constraint.getText()}")\n')
+                buffer.write(f'{self.tab(indent)}{name} = TypeVar("{name}", bound="{safe_dotted_name(generic_type.constraint.getText())}")\n')
             else:
-                buffer.write(f'{self.tab(indent)}{generic_type.type_name} = TypeVar("{generic_type.type_name}")\n')
+                buffer.write(f'{self.tab(indent)}{name} = TypeVar("{name}")\n')
         return buffer.getvalue()
 
     def genericArgs(self, generic: generic) -> str:
-        return ", ".join(generic_type.type_name for generic_type in generic.types)
+        return ", ".join(safe_name(generic_type.type_name) for generic_type in generic.types)
 
     def typeText(self, type: type) -> str:
         match type.kind:
@@ -227,7 +248,7 @@ class PythonEmitter:
 
     def typeTextReference(self, reference_type: reference_type) -> str:
         buffer = io.StringIO()
-        buffer.write(reference_type.reference_name.getText())
+        buffer.write(safe_dotted_name(reference_type.reference_name.getText()))
         if reference_type.generic is not None:
             buffer.write(f"[{self.genericArgs(reference_type.generic)}]")
         return buffer.getvalue()

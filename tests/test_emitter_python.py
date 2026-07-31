@@ -105,6 +105,62 @@ namespace N {
         self.assertIn('B = "B"', c)
         self._assert_runs(results)
 
+    def test_python_keywords_are_escaped(self):
+        # A contract is free to name things 'from', 'class' or 'lambda' - every other target
+        # language accepts them. In Python they are reserved, so emitting them verbatim produces a
+        # module that does not even parse.
+        results = self._emit("""
+namespace N {
+    interface ISearchIndex {
+        property lambda: string
+        readonly property pass: integer
+        method Search( queryText: string, from: integer, size: integer ) => boolean
+        method Raise( global: string )
+    }
+}""")
+        c = self._content(results, "N.py")
+        self.assertIn("def lambda_(self) -> str:", c)
+        self.assertIn("@lambda_.setter", c)
+        self.assertIn("def pass_(self) -> int:", c)
+        self.assertNotIn("@pass_.setter", c)
+        self.assertIn("def Search(self, queryText: str, from_: int, size: int) -> bool:", c)
+        self.assertIn("def Raise(self, global_: str) -> None:", c)
+        self._assert_runs(results)
+
+    def test_non_keywords_are_left_alone(self):
+        # Only real collisions are renamed; soft keywords are legal identifiers in Python and a
+        # gratuitous rename would break the contract's own naming for no reason.
+        results = self._emit("""
+namespace N {
+    interface I {
+        property match: string
+        property type: string
+        method format( id: string )
+    }
+}""")
+        c = self._content(results, "N.py")
+        self.assertIn("def match(self) -> str:", c)
+        self.assertIn("def type(self) -> str:", c)
+        self.assertIn("def format(self, id: str) -> None:", c)
+        self._assert_runs(results)
+
+    def test_keyword_enum_member_keeps_its_wire_value(self):
+        # The member name has to be escaped, but the value is what travels over the wire and must
+        # stay exactly as the contract wrote it.
+        results = self._emit("""
+namespace N {
+    interface I {
+        enum Kind {
+            None,
+            Other
+        }
+    }
+}""")
+        c = self._content(results, "N.py")
+        self.assertIn('None_ = "None"', c)
+        self.assertIn('Other = "Other"', c)
+        self._assert_runs(results)
+
 
 if __name__ == "__main__":
     unittest.main()
